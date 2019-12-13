@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="">
+</head>
+
+<body>
+    <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+    <!--BootstrapCDN-->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/holderjs@2.9.6/holder.min.js"
+        integrity="sha256-yF/YjmNnXHBdym5nuQyBNU62sCUN9Hx5awMkApzhZR0=" crossorigin="anonymous"></script>
+
+    <div>
+
+        <nav class="navbar fixed-top shadow navbar-dark bg-dark">
+            <div class="container">
+                <div class="row justify-content-between">
+                    <div class="col-4">
+                        <a class="navbar-brand" href="#">
+                            <p class="text-center">AI Chat DEMO</p>
+                        </a>
+                    </div>
+                    <div class="col-4">
+                        <div class="row justify-content-end">
+                            <button type="button" class="btn btn-primary">设置</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <br /><br /><br /><br />
+
+        <div class="container">
+            <div class="col">
+
+                <div class="card rounded shadow mb-3">
+                    <div class="row">
+                        <div class="col-2">
+                            <img src="holder.js/64x64?text=Robot" class="rounded-circle float-left p-1" alt="...">
+                        </div>
+                        <div class="col-10">
+                            <div class="card-body">
+                                <p class="card-text"><small class="text-muted">19/12/20 15:36</small></p>
+                                <p class="card-text">你是一个智慧的人，你能到这里咨询就很不简单。能聊一聊你的具体情况吗？希望能够帮到你！</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card rounded shadow mb-3">
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="card-body">
+                                <p class="card-text text-right"><small class="text-muted">19/12/20 15:37</small></p>
+                                <p class="card-text ">
+                                    我们上半年闹离婚，后来他又主动和好，但是我们之前除了新婚，几乎很少有夫妻生活，他说一靠近我就觉得心里像一堆蚂蚁抓挠，特别难受。他说这是他得心理问题，小时候受到唾骂和凌辱，造成了心理阴影。
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <img src="holder.js/64x64?text=Human" class="rounded-circle float-right p-1" alt="...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- begin of chat cards loop -->
+                <small class="text-muted">循环出现的对话内容 ...</small>
+
+                <div class="card rounded shadow mb-3">
+                    <div class="row">
+                        <div class="col-2">
+                            <img src="holder.js/64x64?text=Robot" class="rounded-circle float-left p-1" alt="...">
+                        </div>
+                        <div class="col-10">
+                            <div class="card-body">
+                                <p class="card-text"><small class="text-muted">19/12/20 15:36</small></p>
+                                <p class="card-text">你是一个智慧的人，你能到这里咨询就很不简单。能聊一聊你的具体情况吗？希望能够帮到你！</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card rounded shadow mb-3">
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="card-body">
+                                <p class="card-text text-right"><small class="text-muted">19/12/20 15:37</small></p>
+                                <p class="card-text ">
+                                    我们上半年闹离婚，后来他又主动和好，但是我们之前除了新婚，几乎很少有夫妻生活，他说一靠近我就觉得心里像一堆蚂蚁抓挠，特别难受。他说这是他得心理问题，小时候受到唾骂和凌辱，造成了心理阴影。
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <img src="holder.js/64x64?text=Human" class="rounded-circle float-right p-1" alt="...">
+                        </div>
+                    </div>
+                </div>
+                <div class="card rounded shadow mb-3">
+                    <div class="row">
+                        <div class="col-2">
+                            <img src="holder.js/64x64?text=Robot" class="rounded-circle float-left p-1" alt="...">
+                        </div>
+                        <div class="col-10">
+                            <div class="card-body">
+                                <p class="card-text"><small class="text-muted">19/12/20 15:36</small></p>
+                                <p class="card-text">你是一个智慧的人，你能到这里咨询就很不简单。能聊一聊你的具体情况吗？希望能够帮到你！</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card rounded shadow mb-3">
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="card-body">
+                                <p class="card-text text-right"><small class="text-muted">19/12/20 15:37</small></p>
+                                <p class="card-text ">
+                                    我们上半年闹离婚，后来他又主动和好，但是我们之前除了新婚，几乎很少有夫妻生活，他说一靠近我就觉得心里像一堆蚂蚁抓挠，特别难受。他说这是他得心理问题，小时候受到唾骂和凌辱，造成了心理阴影。
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <img src="holder.js/64x64?text=Human" class="rounded-circle float-right p-1" alt="...">
+                        </div>
+                    </div>
+                </div>
+                <div class="card rounded shadow mb-3">
+                    <div class="row">
+                        <div class="col-2">
+                            <img src="holder.js/64x64?text=Robot" class="rounded-circle float-left p-1" alt="...">
+                        </div>
+                        <div class="col-10">
+                            <div class="card-body">
+                                <p class="card-text"><small class="text-muted">19/12/20 15:36</small></p>
+                                <p class="card-text">你是一个智慧的人，你能到这里咨询就很不简单。能聊一聊你的具体情况吗？希望能够帮到你！</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card rounded shadow mb-3">
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="card-body">
+                                <p class="card-text text-right"><small class="text-muted">19/12/20 15:37</small></p>
+                                <p class="card-text ">
+                                    我们上半年闹离婚，后来他又主动和好，但是我们之前除了新婚，几乎很少有夫妻生活，他说一靠近我就觉得心里像一堆蚂蚁抓挠，特别难受。他说这是他得心理问题，小时候受到唾骂和凌辱，造成了心理阴影。
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <img src="holder.js/64x64?text=Human" class="rounded-circle float-right p-1" alt="...">
+                        </div>
+                    </div>
+                </div>
+                <!-- end of chat cards loop -->
+
+            </div>
+        </div>
+
+        <!-- 占位 -->
+        <div class="p-3">
+            <small class="text-muted">没有更新的消息了</small>
+        </div>
+
+        <nav class="navbar border-top fixed-bottom navbar-light bg-light">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="输入您要发送的内容"></input>
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-outline-secondary">发送</button>
+                    <button type="button" class="btn btn-outline-secondary">常用语 ...</button>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+</body>
+
+</html>
