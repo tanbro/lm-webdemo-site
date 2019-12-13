@@ -1,10 +1,4 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!-->
-<html class="no-js">
-<!--<![endif]-->
 
 <head>
     <meta charset="utf-8">
@@ -16,185 +10,142 @@
 </head>
 
 <body>
-    <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-    <!--BootstrapCDN-->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/holderjs@2.9.6/holder.min.js"
-        integrity="sha256-yF/YjmNnXHBdym5nuQyBNU62sCUN9Hx5awMkApzhZR0=" crossorigin="anonymous"></script>
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="/node_modules/popper.js/dist/umd/popper.min.js"></script>
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/node_modules/holderjs/holder.min.js"></script>
 
-    <div>
-
-        <nav class="navbar fixed-top shadow navbar-dark bg-dark">
-            <div class="container">
-                <div class="row justify-content-between">
-                    <div class="col-4">
-                        <a class="navbar-brand" href="#">
-                            <p class="text-center">AI Chat DEMO</p>
-                        </a>
-                    </div>
-                    <div class="col-4">
-                        <div class="row justify-content-end">
-                            <button type="button" class="btn btn-primary">设置</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </nav>
-
-        <br /><br /><br /><br />
-
+    <nav class="navbar fixed-top shadow navbar-dark bg-dark">
         <div class="container">
-            <div class="col">
+            <div class="row justify-content-between">
+                <div class="col-4">
+                    <a class="navbar-brand" href="#">
+                        <p class="text-center">AI Chat DEMO</p>
+                    </a>
+                </div>
+                <div class="col"></div>
+                <div class="col-4">
+                    <button type="button" class="btn btm-sm btn-primary pull-right">选项</button>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-                <div class="card rounded shadow mb-3">
-                    <div class="row">
-                        <div class="col-2">
-                            <img src="holder.js/64x64?text=Robot" class="rounded-circle float-left p-1" alt="...">
-                        </div>
-                        <div class="col-10">
-                            <div class="card-body">
-                                <p class="card-text"><small class="text-muted">19/12/20 15:36</small></p>
-                                <p class="card-text">你是一个智慧的人，你能到这里咨询就很不简单。能聊一聊你的具体情况吗？希望能够帮到你！</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <div class="d-flex flex-column mb-3">
+        <div class="p-5"></div>
 
-                <div class="card rounded shadow mb-3">
-                    <div class="row">
-                        <div class="col-10">
-                            <div class="card-body">
-                                <p class="card-text text-right"><small class="text-muted">19/12/20 15:37</small></p>
-                                <p class="card-text ">
-                                    我们上半年闹离婚，后来他又主动和好，但是我们之前除了新婚，几乎很少有夫妻生活，他说一靠近我就觉得心里像一堆蚂蚁抓挠，特别难受。他说这是他得心理问题，小时候受到唾骂和凌辱，造成了心理阴影。
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <img src="holder.js/64x64?text=Human" class="rounded-circle float-right p-1" alt="...">
-                        </div>
+        <div class="d-flex flex-row">
+            <div class="p-1">
+                <img src="holder.js/64x64?text=Robot" class="rounded-circle p-1">
+            </div>
+            <div class="p-1">
+                <div class="popover bs-popover-right position-relative shadow my-1 mx-0" style="z-index: 1020;">
+                    <div class="arrow"></div>
+                    <div class="popover-body">
+                        你好,我是心理机构咨询师刘老师。希望以下回答能帮助到你。
                     </div>
                 </div>
-
-                <!-- begin of chat cards loop -->
-                <small class="text-muted">循环出现的对话内容 ...</small>
-
-                <div class="card rounded shadow mb-3">
-                    <div class="row">
-                        <div class="col-2">
-                            <img src="holder.js/64x64?text=Robot" class="rounded-circle float-left p-1" alt="...">
-                        </div>
-                        <div class="col-10">
-                            <div class="card-body">
-                                <p class="card-text"><small class="text-muted">19/12/20 15:36</small></p>
-                                <p class="card-text">你是一个智慧的人，你能到这里咨询就很不简单。能聊一聊你的具体情况吗？希望能够帮到你！</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card rounded shadow mb-3">
-                    <div class="row">
-                        <div class="col-10">
-                            <div class="card-body">
-                                <p class="card-text text-right"><small class="text-muted">19/12/20 15:37</small></p>
-                                <p class="card-text ">
-                                    我们上半年闹离婚，后来他又主动和好，但是我们之前除了新婚，几乎很少有夫妻生活，他说一靠近我就觉得心里像一堆蚂蚁抓挠，特别难受。他说这是他得心理问题，小时候受到唾骂和凌辱，造成了心理阴影。
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <img src="holder.js/64x64?text=Human" class="rounded-circle float-right p-1" alt="...">
-                        </div>
-                    </div>
-                </div>
-                <div class="card rounded shadow mb-3">
-                    <div class="row">
-                        <div class="col-2">
-                            <img src="holder.js/64x64?text=Robot" class="rounded-circle float-left p-1" alt="...">
-                        </div>
-                        <div class="col-10">
-                            <div class="card-body">
-                                <p class="card-text"><small class="text-muted">19/12/20 15:36</small></p>
-                                <p class="card-text">你是一个智慧的人，你能到这里咨询就很不简单。能聊一聊你的具体情况吗？希望能够帮到你！</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card rounded shadow mb-3">
-                    <div class="row">
-                        <div class="col-10">
-                            <div class="card-body">
-                                <p class="card-text text-right"><small class="text-muted">19/12/20 15:37</small></p>
-                                <p class="card-text ">
-                                    我们上半年闹离婚，后来他又主动和好，但是我们之前除了新婚，几乎很少有夫妻生活，他说一靠近我就觉得心里像一堆蚂蚁抓挠，特别难受。他说这是他得心理问题，小时候受到唾骂和凌辱，造成了心理阴影。
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <img src="holder.js/64x64?text=Human" class="rounded-circle float-right p-1" alt="...">
-                        </div>
-                    </div>
-                </div>
-                <div class="card rounded shadow mb-3">
-                    <div class="row">
-                        <div class="col-2">
-                            <img src="holder.js/64x64?text=Robot" class="rounded-circle float-left p-1" alt="...">
-                        </div>
-                        <div class="col-10">
-                            <div class="card-body">
-                                <p class="card-text"><small class="text-muted">19/12/20 15:36</small></p>
-                                <p class="card-text">你是一个智慧的人，你能到这里咨询就很不简单。能聊一聊你的具体情况吗？希望能够帮到你！</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card rounded shadow mb-3">
-                    <div class="row">
-                        <div class="col-10">
-                            <div class="card-body">
-                                <p class="card-text text-right"><small class="text-muted">19/12/20 15:37</small></p>
-                                <p class="card-text ">
-                                    我们上半年闹离婚，后来他又主动和好，但是我们之前除了新婚，几乎很少有夫妻生活，他说一靠近我就觉得心里像一堆蚂蚁抓挠，特别难受。他说这是他得心理问题，小时候受到唾骂和凌辱，造成了心理阴影。
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <img src="holder.js/64x64?text=Human" class="rounded-circle float-right p-1" alt="...">
-                        </div>
-                    </div>
-                </div>
-                <!-- end of chat cards loop -->
-
             </div>
         </div>
 
-        <!-- 占位 -->
-        <div class="p-3">
-            <small class="text-muted">没有更新的消息了</small>
-        </div>
-
-        <nav class="navbar border-top fixed-bottom navbar-light bg-light">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="输入您要发送的内容"></input>
-                <div class="input-group-append">
-                    <button type="button" class="btn btn-outline-secondary">发送</button>
-                    <button type="button" class="btn btn-outline-secondary">常用语 ...</button>
+        <div class="d-flex flex-row-reverse">
+            <div class="p-1">
+                <img src="holder.js/64x64?text=马莉" class="rounded-circle p-1">
+            </div>
+            <div class="p-1">
+                <div class="popover bs-popover-left position-relative shadow my-1 mx-0" style="z-index: 1020;">
+                    <div class="arrow"></div>
+                    <div class="popover-body">
+                        恩，你好 😀
+                    </div>
                 </div>
             </div>
-        </nav>
+        </div>
+
+        <div class="d-flex flex-row">
+            <div class="p-1">
+                <img src="holder.js/64x64?text=Robot" class="rounded-circle p-1">
+            </div>
+            <div class="p-1">
+                <div class="popover bs-popover-right position-relative shadow my-1 mx-0" style="z-index: 1020;">
+                    <div class="arrow"></div>
+                    <div class="popover-body">
+                        你能到这里咨询就很不简单。能聊一聊你的情况吗？希望能够帮到你！
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-row-reverse">
+            <div class="p-1">
+                <img src="holder.js/64x64?text=马莉" class="rounded-circle p-1">
+            </div>
+            <div class="p-1">
+                <div class="popover bs-popover-left position-relative shadow my-1 mx-0" style="z-index: 1020;">
+                    <div class="arrow"></div>
+                    <div class="popover-body">
+                        此刻有点儿失眠心情烦躁，我想了很久没有想明白，为什么他会计划着婚内出轨，……心里，我基本上认定原因应该是我身材不怎么好，胸部不够吸引人，因为婚后发现了在婚前，他约P了一个又肥又长相不佳的女人。我以为就是因为对方胸部傲人。在壹心理一些文章的引导下，我突然明白，源头是性生活不和谐。婚前同居一年多，到婚后2年，性生活基本就是，直奔主题，他一手拿着手机欣赏着他的成人影片一边爱爱，很少会主动关心我的感受，也很少理会我让他收起手机的要求。而且另一方面，他基本每晚都会要求我用嘴亲亲，他自己则拿着手机看片或者无关紧要的东西，让我经常觉得自己就是一个娃娃一个工具。以前我主动跟他说起过几次，然而也只是不了了之。后来我基本对性生活没有兴趣，也很反感为他口J。而且，日常生活变得频繁小吵冷战，很少有之前无话不谈的亲密，我不知道我们还有没有重归于好的机会……
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-row">
+            <div class="p-1">
+                <img src="holder.js/64x64?text=Robot" class="rounded-circle p-1">
+            </div>
+            <div class="p-1">
+                <div class="popover bs-popover-right position-relative shadow my-1 mx-0" style="z-index: 1020;">
+                    <div class="arrow"></div>
+                    <div class="popover-body">
+                        你好,能够理解你的心情。你老公的性格是互补型的,并且是喜欢着你的,但是你老公身上一定有你的道理,对不对?不知道你们结婚多长时间了?你和老公的性格特点是怎样的?你理想的生活是怎样的?你能选择来这里求助,就非常的不简单。咨询是一个过程,我需要了解更多的情况,才能帮你分析解决问题。我帮助过很多和你一样困扰的人,相信也可以帮到你。可以多说一些你的情况吗?
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-row-reverse">
+            <div class="p-1">
+                <img src="holder.js/64x64?text=马莉" class="rounded-circle p-1">
+            </div>
+            <div class="p-1">
+                <div class="popover bs-popover-left position-relative shadow my-1 mx-0" style="z-index: 1020;">
+                    <div class="arrow"></div>
+                    <div class="popover-body">
+                        我们上半年闹离婚，后来他又主动和好，但是我们之前除了新婚，几乎很少有夫妻生活，他说一靠近我就觉得心里像一堆蚂蚁抓挠，特别难受。他说这是他得心理问题，小时候受到唾骂和凌辱，造成了心理阴影。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-row">
+            <div class="p-1">
+                <img src="holder.js/64x64?text=Robot" class="rounded-circle p-1">
+            </div>
+            <div class="p-1">
+                <div class="popover bs-popover-right position-relative shadow my-1 mx-0" style="z-index: 1020;">
+                    <div class="arrow"></div>
+                    <div class="popover-body">
+                        你不想离婚,那么他似乎也不太想离婚,但是为何你会这样去选择呢?是什么让你决定和他离婚呢?这些原因,都是需要探索的,如果你愿意可以和我联系。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-5"></div>
     </div>
+
+    <nav class="navbar border-top fixed-bottom navbar-light bg-light">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="输入您要发送的内容"></input>
+            <div class="input-group-append">
+                <button type="button" class="btn btn-outline-secondary">发送</button>
+                <button type="button" class="btn btn-outline-secondary">...</button>
+            </div>
+        </div>
+    </nav>
+
 
 </body>
 
