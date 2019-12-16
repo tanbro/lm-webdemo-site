@@ -1,0 +1,10 @@
+.popover{
+    z-index: 1011;
+}
+.bs-popover-left>.arrow:after {
+    border-left-color: greenyellow;
+}
+
+.bs-popover-left>.popover-body {
+    background-color: greenyellow;
+}
