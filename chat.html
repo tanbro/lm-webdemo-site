@@ -16,6 +16,16 @@
     <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="/node_modules/holderjs/holder.min.js"></script>
 
+    <style>
+        .bs-popover-left>.arrow:after {
+            border-left-color: greenyellow;
+        }
+
+        .bs-popover-left>.popover-body {
+            background-color: greenyellow;
+        }
+    </style>
+
     <nav class="navbar fixed-top shadow navbar-dark bg-dark">
         <div class="container">
             <div class="row justify-content-between">
@@ -35,8 +45,20 @@
     <div class="d-flex flex-column mb-3">
         <div class="p-5"></div>
 
-        <div id="speech_bubble"></div>
-<!-- 
+        <div class="d-flex flex-row-reverse">
+            <div class="p-1">
+                <img src="holder.js/64x64?text=李珂" class="rounded-circle p-1">
+            </div>
+            <div class="p-1">
+                <div class="popover bs-popover-left position-relative shadow my-1 mx-0" style="z-index: 1011;">
+                    <div class="arrow"></div>
+                    <div class="popover-body">
+                        今天老板狠狠骂了我，就因为不太重要的事情，我也和他顶了几句嘴，真窝火，我想该不该辞职，此处不留爷自有留爷处。我该怎么办，还是份不错的工作，收入还好，就是一直做的不顺心。脾气感觉也越来越不好。
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="d-flex flex-row">
             <div class="p-1">
                 <img src="holder.js/64x64?text=Robot" class="rounded-circle p-1">
@@ -45,21 +67,63 @@
                 <div class="popover bs-popover-right position-relative shadow my-1 mx-0" style="z-index: 1011;">
                     <div class="arrow"></div>
                     <div class="popover-body">
-                        你好,我是心理机构咨询师刘老师。希望以下回答能帮助到你。
+                        职场中,管理者和被管理者之间的关系是非常微妙的。所以,管理者在与被管理者发生冲突的时候,首先要保持冷静,不要被自己的情绪所左右,然后,要学会沟通,使双方都冷静下来,再做决定。
                     </div>
                 </div>
             </div>
         </div>
- -->
+
         <div class="d-flex flex-row-reverse">
             <div class="p-1">
-                <img src="holder.js/64x64?text=马莉" class="rounded-circle p-1">
+                <img src="holder.js/64x64?text=李珂" class="rounded-circle p-1">
             </div>
             <div class="p-1">
                 <div class="popover bs-popover-left position-relative shadow my-1 mx-0" style="z-index: 1011;">
                     <div class="arrow"></div>
                     <div class="popover-body">
-                        恩，你好 😀
+                        这工作没法干，受不了。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-row">
+            <div class="p-1">
+                <img src="holder.js/64x64?text=Robot" class="rounded-circle p-1">
+            </div>
+            <div class="p-1">
+                <div class="popover bs-popover-right position-relative shadow my-1 mx-0" style="z-index: 1011;">
+                    <div class="arrow"></div>
+                    <div class="popover-body">
+                        工作不顺心,就换工作吧。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-row-reverse">
+            <div class="p-1">
+                <img src="holder.js/64x64?text=李珂" class="rounded-circle p-1">
+            </div>
+            <div class="p-1">
+                <div class="popover bs-popover-left position-relative shadow my-1 mx-0" style="z-index: 1011;">
+                    <div class="arrow"></div>
+                    <div class="popover-body">
+                        但是工作不好找。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-row">
+            <div class="p-1">
+                <img src="holder.js/64x64?text=Robot" class="rounded-circle p-1">
+            </div>
+            <div class="p-1">
+                <div class="popover bs-popover-right position-relative shadow my-1 mx-0" style="z-index: 1011;">
+                    <div class="arrow"></div>
+                    <div class="popover-body">
+                        这就看你自己了,你觉得自己哪里做得不好,就努力,自己不会的就请教,不要害怕失败,失败是成功之母。
                     </div>
                 </div>
             </div>
