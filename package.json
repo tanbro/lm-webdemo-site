@@ -4,10 +4,14 @@
   "description": "our LM webdemo site",
   "private": true,
   "dependencies": {
-    "bootstrap": "~4",
+    "@babel/standalone": "^7.7.6",
+    "bootstrap": "^4.4.1",
     "holderjs": "^2.9.6",
     "jquery": "^3.4.1",
-    "popper.js": "^1.16.0"
+    "popper.js": "^1.16.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "reactstrap": "^8.2.0"
   },
   "devDependencies": {
     "http-server": "^0.12.0",
@@ -16,7 +20,7 @@
   },
   "scripts": {
     "build": "webpack",
-    "http-server": "npx http-server",
+    "start": "npx http-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "liu xue yan",
