@@ -3,29 +3,11 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import SpeechBubble from './SpeechBubble'
-import SelfSpeechBubble from './SelfSpeechBubble'
-
-
-class ListItemWrapper extends React.Component {
-    render() {
-        const data = this.props.data;
-
-        return (
-            <div>
-                {data.isSelf ? (
-                    <SelfSpeechBubble data={data}></SelfSpeechBubble>
-                ) : (
-                    <SpeechBubble data={data}></SpeechBubble>
-                )}
-            </div>
-        )
-    }
-}
 
 class SpeechBubbleList extends React.Component {
     render() {
         const itemsDom = this.props.data.map((m, i) =>
-            <ListItemWrapper key={i} data={m}></ListItemWrapper>
+            <SpeechBubble key={i} data={m}></SpeechBubble>
         );
         return (
             <div className="d-flex flex-column mb-3">
