@@ -29,7 +29,7 @@ class LoadingModal extends React.Component {
         const state = this.state
         return (
             <div>
-                <Modal isOpen={this.state.isOpen} centered={true} modalTransition={{ timeout: 500 }} backdropTransition={{ timeout: 1000 }}>
+                <Modal isOpen={state.isOpen} centered={true} modalTransition={{ timeout: 500 }} backdropTransition={{ timeout: 1000 }}>
                     <ModalBody>
                         <div className="d-flex justify-content-center">
                             <div className="p-2">

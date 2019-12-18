@@ -7,9 +7,10 @@ import SpeechBubble from './SpeechBubble'
 class SpeechBubbleList extends React.Component {
 
     render() {
-        const itemsDom = this.props.data.map((m, i) =>{
-            return <SpeechBubble key={i} data={m}></SpeechBubble>
-        });
+        const itemsDom = this.props.data.map(
+            (m, i) =>
+                <SpeechBubble key={i} data={m}></SpeechBubble>
+        )
 
         return (
             <div className="d-flex flex-column mb-3">
