@@ -146,8 +146,6 @@ class App extends React.Component {
   }
 
   handleInputMessageSubmit(value) {
-    console.log("this in handleSubmit:", this)
-
     // 增加对话历史数据
     value = value.trim();
     this.state.speechData.history.push({
@@ -171,20 +169,20 @@ class App extends React.Component {
         msg: value,
       })
     })
-      .then(response => response.json())
+      .then(response => response.json())  /// TODO: response 错误 status 处理
       .then(
         (result) => {
           // 增加对话历史数据
           this.state.speechData.history.push({
             text: result.msg,
           })
-          // reader
+          // do render
           this.setState(state => ({
             speechData: state.speechData
           }));
         },
         (error) => {
-
+          /// TODO: input 错误处理
         }
       )
   }

@@ -6,9 +6,19 @@ import logo from '../logo.svg';
 import './SpeechBubble.css';
 
 class SpeechBubble extends React.Component {
+    constructor(props) {
+        super(props);
+        this.selfRef = React.createRef();
+    }
+
     state = {
         data: this.props.data
     };
+
+    componentDidMount() {
+        const element = this.selfRef.current;
+        element.scrollIntoView()
+    }
 
     render() {
         const data = this.props.data;
@@ -16,7 +26,7 @@ class SpeechBubble extends React.Component {
         const popoverClass = data.isReverse ? "bs-popover-left" : "bs-popover-right";
 
         return (
-            <div className={`d-flex flex-row ${flexClass}`}>
+            <div ref={this.selfRef} className={`d-flex flex-row ${flexClass}`}>
                 <div className="p-1">
                     <img src={logo} className="rounded-circle p-1" alt="" width="48" height="48"></img>
                 </div>
