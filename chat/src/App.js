@@ -15,7 +15,7 @@ import LoadingModal from './components/LoadingModal'
 import './App.css';
 import logo from './logo.svg';
 
-const serverUrl = "http://10.1.1.174:8888/chat";
+const serverUrl = "http://10.1.1.174:8090/chat";
 
 class App extends React.Component {
 
@@ -65,6 +65,7 @@ class App extends React.Component {
       function pump() {
         return reader.read().then(({ value, done }) => {
           value = utf8decoder.decode(value)
+          console.debug("response-stream", value)
           if (done) {
             return chunks;
           }
@@ -107,7 +108,6 @@ class App extends React.Component {
             if (!line) {
               return;
             }
-            console.debug(`server chat process initial response chuck : ${line}`);
             let parts = line.split(":");
             if (parts.length < 2) {
               return;
