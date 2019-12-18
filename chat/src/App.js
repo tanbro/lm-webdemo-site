@@ -28,7 +28,7 @@ class App extends React.Component {
   state = {
     loadingModal: {
       isOpen: true,
-      text: '加载初始化数据 ...',
+      text: '',
     },
     speechData: {
       id: null,
@@ -45,6 +45,8 @@ class App extends React.Component {
   resetChat() {
     console.info('resetChat')
 
+    this.openLoadingModal('重置会话 ...')
+
     fetch(serverUrl, {
       method: 'POST',
       cache: 'no-cache',
@@ -52,12 +54,8 @@ class App extends React.Component {
     })
       .then((response) => {
         if (!response.ok) {
-          this.setState(state => ({
-            loadingModal: Object.assign(
-              state.loadingModal,
-              { isOpen: false, key: uuid() }
-            )
-          }));
+          // TODO: 错误处理
+          this.closeLoadingModal()
           throw new Error('Network response was not ok.');
         }
         return response.body;
@@ -116,7 +114,7 @@ class App extends React.Component {
                     // 关闭 loading modal
                     loadingModal: Object.assign(
                       state.loadingModal,
-                      { isOpen: false, key: uuid() }
+                      { key: uuid(), isOpen: false, text: '' }
                     )
                   }));
                   return true;
@@ -132,12 +130,7 @@ class App extends React.Component {
           })(body)
         },
         (err) => {
-          this.setState(state => ({
-            loadingModal: Object.assign(
-              state.loadingModal,
-              { isOpen: false, key: uuid() }
-            )
-          }));
+          this.closeLoadingModal()
           console.error('fetch failed', err);
         }
       )
@@ -145,6 +138,8 @@ class App extends React.Component {
 
   reattachChat(chat) {
     console.info('reattachChat:', chat)
+
+    this.openLoadingModal('恢复会话数据 ...')
 
     let url = `${serverUrl}/${chat.id}`
     fetch(url, {
@@ -154,6 +149,7 @@ class App extends React.Component {
       .then(response => {
         if (!response.ok) {
           //TODO: 错误处理
+          this.closeLoadingModal()
         } else {
           return response.json()
         }
@@ -163,7 +159,9 @@ class App extends React.Component {
           /// 将历史对话数据放上去
           console.log('reattach chat:', result)
           let chat = result
-          let history = []
+          let history = [{
+            text: chat.personality
+          }]
           chat.history.forEach(m => {
             history.push({
               text: m.msg,
@@ -178,25 +176,52 @@ class App extends React.Component {
             },
             loadingModal: Object.assign(
               state.loadingModal,
-              { isOpen: false, key: uuid() }
+              { key: uuid(), isOpen: false, text: '' }
             )
           }))
         },
         err => {
           //TODO: 错误处理
+          this.closeLoadingModal()
           throw new Error(err)
         }
       )
   }
 
+  openLoadingModal(text) {
+    this.setState(state => ({
+      loadingModal: Object.assign(
+        state.loadingModal, {
+        key: uuid(),
+        isOpen: true,
+        text: text,
+      }
+      )
+    }))
+  }
+
+  closeLoadingModal() {
+    this.setState(state => ({
+      loadingModal: Object.assign(
+        state.loadingModal, {
+        key: uuid(),
+        isOpen: true,
+        text: '',
+      }
+      )
+    }))
+  }
+
   getChat() {
+    this.openLoadingModal('加载会话信息 ...')
+
     fetch(serverUrl, {
       cache: 'no-cache',
       mode: 'cors',
     })
       .then(response => {
         if (!response.ok) {
-          //TODO: 错误处理
+          this.closeLoadingModal()
         } else {
           return response.json()
         }
@@ -213,6 +238,7 @@ class App extends React.Component {
         },
         err => {
           //TODO: 错误处理
+          this.closeLoadingModal()
           throw new Error(err)
         }
       )
@@ -285,13 +311,9 @@ class App extends React.Component {
     return (
       <div className='App'>
         <LoadingModal key={state.loadingModal.key} isOpen={state.loadingModal.isOpen} text={state.loadingModal.text}></LoadingModal>
-
         <TopBar logo={logo} title='Chat Demo'></TopBar>
-
         <SpeechBubbleList key={state.speechData.id} data={state.speechData.history}></SpeechBubbleList>
-
         <BottomBar onSubmit={this.handleInputMessageSubmit}></BottomBar>
-
       </div>
     )
   }
