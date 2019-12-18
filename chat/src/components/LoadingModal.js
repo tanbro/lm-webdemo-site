@@ -1,7 +1,7 @@
 /* eslint react/no-multi-comp: 0, react/prop-types: 0 */
 
 import React from 'react'
-import { Modal, ModalBody, Spinner } from 'reactstrap'
+import { Modal, ModalBody } from 'reactstrap'
 
 
 class LoadingModal extends React.Component {
@@ -26,16 +26,19 @@ class LoadingModal extends React.Component {
     }
 
     render() {
+        const state = this.state
         return (
             <div>
                 <Modal isOpen={this.state.isOpen} centered={true} modalTransition={{ timeout: 500 }} backdropTransition={{ timeout: 1000 }}>
                     <ModalBody>
                         <div className="d-flex justify-content-center">
-                            <Spinner type="grow" sz="lg" color="primary"></Spinner>
+                            <div className="p-2">
+                                <div className="spinner-grow spinner-grow-xl" role="status"></div>
+                            </div>
+                            <div className="p-2">
+                                <span className='text-xl-center'>{state.text}</span>
+                            </div>
                         </div>
-                        <p className="text-center">
-                            {this.state.text}
-                        </p>
                     </ModalBody>
                 </Modal>
             </div>

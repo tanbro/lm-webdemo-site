@@ -29,7 +29,7 @@ class App extends React.Component {
   state = {
     loadingModal: {
       isOpen: true,
-      text: 'loading ...',
+      text: '加载初始化数据 ...',
     },
     speechData: {
       id: null,
@@ -40,12 +40,8 @@ class App extends React.Component {
     },
   }
 
-
-
-  componentDidMount() {
-
-    /// 重新初始化
-    console.debug('重新初始化 ...')
+  resetChat() {
+    console.info('resetChat')
 
     fetch(serverUrl, {
       method: 'POST',
@@ -143,6 +139,189 @@ class App extends React.Component {
           console.error('fetch failed', err);
         }
       )
+  }
+
+  reattachChat(chat) {
+    console.info('reattachChat:', chat)
+
+    let url = `${serverUrl}/${chat.id}`
+    fetch(url, {
+      cache: 'no-cache',
+      mode: 'cors',
+    })
+      .then(response => {
+        if (!response.ok) {
+          //TODO: 错误处理
+        } else {
+          return response.json()
+        }
+      })
+      .then(
+        result => {
+          /// 将历史对话数据放上去
+          console.log('reattach chat:', result)
+          let chat = result
+          let history = []
+          chat.history.forEach(m => {
+            history.push({
+              text: m.msg,
+              isReverse: m.dir === 'input'
+            })
+          })
+          this.setState(state => ({
+            speechData: {
+              id: chat.id,
+              personality: chat.personality,
+              history: history,
+            },
+            loadingModal: Object.assign(
+              state.loadingModal,
+              { isOpen: false, key: uuid() }
+            )
+          }))
+        },
+        err => {
+          //TODO: 错误处理
+          throw new Error(err)
+        }
+      )
+  }
+
+  getChat() {
+    fetch(serverUrl, {
+      cache: 'no-cache',
+      mode: 'cors',
+    })
+      .then(response => {
+        if (!response.ok) {
+          //TODO: 错误处理
+        } else {
+          return response.json()
+        }
+      })
+      .then(
+        result => {
+          let chats = result
+          if (chats.length) {
+            let chat = chats[0]
+            this.reattachChat(chat)
+          } else {
+            this.resetChat()
+          }
+        },
+        err => {
+          //TODO: 错误处理
+          throw new Error(err)
+        }
+      )
+  }
+
+  componentDidMount() {
+
+    this.getChat()
+
+    // 判断是否有存在的会话，如果有，直接附加上去！
+
+    /// 重新初始化
+    // console.debug('重新初始化 ...')
+
+    // fetch(serverUrl, {
+    //   method: 'POST',
+    //   cache: 'no-cache',
+    //   mode: 'cors',
+    // })
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       this.setState(state => ({
+    //         loadingModal: Object.assign(
+    //           state.loadingModal,
+    //           { isOpen: false, key: uuid() }
+    //         )
+    //       }));
+    //       throw new Error('Network response was not ok.');
+    //     }
+    //     return response.body;
+    //   })
+    //   .then(
+    //     (body) => {
+    //       return (stream => {
+    //         // stream read
+    //         const reader = stream.getReader();
+    //         const utf8decoder = new TextDecoder();
+    //         const keys = ['id', 'personality'];
+    //         const attrs = {};
+    //         let buf = '';
+
+    //         const pump = () => {
+    //           return reader.read().then(({ value, done }) => {
+    //             value = utf8decoder.decode(value);
+    //             console.debug('response-stream:', value);
+    //             buf += value;  // 缓冲下来，然后按照行进行处理
+    //             while (true) {
+    //               let pos = buf.indexOf('\n');
+    //               if (pos < 0) {
+    //                 break;
+    //               }
+    //               let line = buf.slice(0, pos).trim();
+    //               buf = buf.slice(pos + 1)
+    //               if (!line) {
+    //                 break;
+    //               }
+    //               let parts = line.split(':');
+    //               if (parts.length < 2) {
+    //                 break;
+    //               }
+    //               let k = parts[0].trim();
+    //               let v = '';
+    //               if (keys.indexOf(k) >= 0) {
+    //                 v = parts.slice(1).join(':');
+    //                 v = v.trim();
+    //                 if (!v) {
+    //                   break;
+    //                 }
+    //                 attrs[k] = v;
+    //               }
+    //             }
+
+    //             // response 结束！
+    //             if (done) {
+    //               // 将 personality 作为一个假的对话
+    //               this.state.speechData.history.push({
+    //                 text: attrs.personality
+    //               })
+    //               // do render
+    //               this.setState(state => ({
+    //                 // 更新对话历史列表
+    //                 speechData: Object.assign(state.speechData, attrs),
+    //                 // 关闭 loading modal
+    //                 loadingModal: Object.assign(
+    //                   state.loadingModal,
+    //                   { isOpen: false, key: uuid() }
+    //                 )
+    //               }));
+    //               return true;
+    //             }
+
+    //             ///
+    //             return pump();
+    //           });
+    //         };
+
+    //         return pump();
+
+    //       })(body)
+    //     },
+    //     (err) => {
+    //       this.setState(state => ({
+    //         loadingModal: Object.assign(
+    //           state.loadingModal,
+    //           { isOpen: false, key: uuid() }
+    //         )
+    //       }));
+    //       console.error('fetch failed', err);
+    //     }
+    //   )
+
   }
 
   handleInputMessageSubmit(value) {
