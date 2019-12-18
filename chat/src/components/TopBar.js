@@ -1,11 +1,26 @@
 import React from 'react';
 
-// import 'jquery/dist/jquery.min.js'
-// import 'popper.js/dist/umd/popper.min.js'
+import 'jquery/dist/jquery.min.js'
+import 'popper.js/dist/umd/popper.min.js'
 import 'bootstrap/dist/css/bootstrap.min.css'
-// import 'bootstrap/dist/js/bootstrap.min.js'
+import 'bootstrap/dist/js/bootstrap.min.js'
 
 class TopBar extends React.Component {
+    constructor(props) {
+        super(props)
+
+        // This binding is necessary to make `this` work in the callback
+        this.handleMenuItemItemClick = this.handleMenuItemItemClick.bind(this)
+    }
+
+
+    handleMenuItemItemClick(evt) {
+        const handler = this.props.onMenuItemClick
+        if (handler) {
+            handler(evt)
+        }
+    }
+
     render() {
         return (
             <nav className="navbar fixed-top shadow navbar-dark bg-dark">
@@ -19,9 +34,15 @@ class TopBar extends React.Component {
                         选项
                     </button>
                     <div className="dropdown-menu dropdown-menu-right">
-                        <button className="dropdown-item" type="button">重新加载</button>
+                        <button className="dropdown-item" type="button"
+                            data-option='reload'
+                            onClick={this.handleMenuItemItemClick}
+                        >重新加载</button>
                         <div className="dropdown-divider"></div>
-                        <button className="dropdown-item" type="button">重置会话</button>
+                        <button className="dropdown-item" type="button"
+                            data-option='reset'
+                            onClick={this.handleMenuItemItemClick}
+                        >重置会话</button>
                     </div>
                 </div>
             </nav>

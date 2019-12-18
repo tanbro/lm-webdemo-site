@@ -22,7 +22,8 @@ class App extends React.Component {
     super(props);
 
     // Bind the this context to the handler function
-    this.handleInputMessageSubmit = this.handleInputMessageSubmit.bind(this);
+    this.handleInputMessageSubmit = this.handleInputMessageSubmit.bind(this)
+    this.handleOptionMenuClick = this.handleOptionMenuClick.bind(this)
   }
 
   state = {
@@ -104,9 +105,10 @@ class App extends React.Component {
                 // response 结束！
                 if (done) {
                   // 将 personality 作为一个假的对话
-                  this.state.speechData.history.push({
+                  this.state.speechData.history = [{
                     text: attrs.personality
-                  })
+                  }]
+                  console.debug('重置 chat:', attrs)
                   // do render
                   this.setState(state => ({
                     // 更新对话历史列表
@@ -206,7 +208,7 @@ class App extends React.Component {
           isOpen: true,
           text: text,
         })
-      }))      
+      }))
     }
   }
 
@@ -314,13 +316,23 @@ class App extends React.Component {
     })
   }
 
+
+  handleOptionMenuClick(evt) {
+    const optName = evt.target.dataset.option
+    if (optName === 'reload') {
+      this.getChat()
+    } else {
+      this.resetChat()
+    }
+  }
+
   render() {
     const state = this.state
 
     return (
       <div className='App'>
         <LoadingModal key={state.loadingModal.key} isOpen={state.loadingModal.isOpen} text={state.loadingModal.text}></LoadingModal>
-        <TopBar logo={logo} title='Chat Demo'></TopBar>
+        <TopBar logo={logo} title='Chat Demo' onMenuItemClick={this.handleOptionMenuClick}></TopBar>
         <SpeechBubbleList key={state.speechData.id} data={state.speechData.history}></SpeechBubbleList>
         <BottomBar onSubmit={this.handleInputMessageSubmit}></BottomBar>
       </div>
