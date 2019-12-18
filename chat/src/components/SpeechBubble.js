@@ -7,8 +7,8 @@ import './SpeechBubble.css';
 
 class SpeechBubble extends React.Component {
     constructor(props) {
-        super(props);
-        this.selfRef = React.createRef();
+        super(props)
+        this.innerRef = React.createRef()
     }
 
     state = {
@@ -16,17 +16,17 @@ class SpeechBubble extends React.Component {
     };
 
     componentDidMount() {
-        const element = this.selfRef.current;
+        const element = this.innerRef.current
         element.scrollIntoView()
     }
 
     render() {
         const data = this.props.data;
-        const flexClass = data.isReverse ? "d-flex flex-row flex-row-reverse" : "d-flex flex-row";
-        const popoverClass = data.isReverse ? "bs-popover-left" : "bs-popover-right";
+        const flexClass = data.isReverse ? "d-flex flex-row flex-row-reverse" : "d-flex flex-row"
+        const popoverClass = data.isReverse ? "bs-popover-left" : "bs-popover-right"
 
         return (
-            <div ref={this.selfRef} className={`d-flex flex-row ${flexClass}`}>
+            <div ref={this.innerRef} className={`d-flex flex-row ${flexClass}`}>
                 <div className="p-1">
                     <img src={logo} className="rounded-circle p-1" alt="" width="48" height="48"></img>
                 </div>

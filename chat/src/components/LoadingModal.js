@@ -1,28 +1,28 @@
 /* eslint react/no-multi-comp: 0, react/prop-types: 0 */
 
-import React from 'react';
-import { Modal, ModalBody, Spinner } from 'reactstrap';
+import React from 'react'
+import { Modal, ModalBody, Spinner } from 'reactstrap'
 
 
 class LoadingModal extends React.Component {
     constructor(props) {
-        super(props);
-        this.handleIsOpen = this.handleIsOpen.bind(this);
+        super(props)
+        this.handleIsOpen = this.handleIsOpen.bind(this)
     }
 
     state = {
         text: this.props.text,
         isOpen: this.props.isOpen,
-    };
+    }
 
     handleIsOpen(event) {
         this.setState(state => ({
             isOpen: event.target.value
-        }));
+        }))
     }
 
     handleTextChange(event) {
-        this.setState({ text: event.target.value });
+        this.setState({ text: event.target.value })
     }
 
     render() {
