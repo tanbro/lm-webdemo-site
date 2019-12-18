@@ -8,6 +8,9 @@ class BottomBar extends React.Component {
     constructor(props) {
         super(props)
 
+
+        this.inputRef = React.createRef()
+
         // This binding is necessary to make `this` work in the callback
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -18,6 +21,11 @@ class BottomBar extends React.Component {
         isSending: false,
     };
 
+    focusInput(){
+        const element = this.inputRef.current
+        element.focus()
+    }
+
     handleChange(event) {
         event.preventDefault();
         this.setState({ value: event.target.value });
@@ -25,9 +33,11 @@ class BottomBar extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault();
+
         this.setState({
             isSending: true
         })
+
         this.props.onSubmit(this.state.value)
             .then(
                 () => {
@@ -35,12 +45,13 @@ class BottomBar extends React.Component {
                         value: '',
                         isSending: false
                     })
+                    this.focusInput()
                 },
                 (_) => {
                     this.setState({
                         isSending: false
                     })
-
+                    this.focusInput()
                 }
             )
     }
@@ -48,24 +59,12 @@ class BottomBar extends React.Component {
     render() {
         const state = this.state
 
-        // let sendingDom = null
-        // if (state.isSending) {
-        //     sendingDom =
-        //         <div class="spinner-grow text-secondary" role="status">
-        //             <span class="sr-only">发送...</span>
-        //         </div>
-        // } else {
-        //     sendingDom =
-        //         <button type='submit' value='Submit' className='btn btn-outline-secondary' disabled={state.isSending}>
-        //             发送
-        //         </button>
-        // }
-
         return (
             <nav className='navbar border-top fixed-bottom navbar-light bg-light'>
                 <form className='form-inline' onSubmit={this.handleSubmit}>
                     <div className='input-group'>
                         <input type='text' className='form-control'
+                            ref={this.inputRef}
                             value={state.value}
                             disabled={state.isSending}
                             onChange={this.handleChange}

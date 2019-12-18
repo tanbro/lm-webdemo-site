@@ -28,7 +28,7 @@ class App extends React.Component {
   state = {
     loadingModal: {
       isOpen: true,
-      text: '',
+      text: '从服务器加载会话数据 ...',
     },
     speechData: {
       id: null,
@@ -113,9 +113,11 @@ class App extends React.Component {
                     speechData: Object.assign(state.speechData, attrs),
                     // 关闭 loading modal
                     loadingModal: Object.assign(
-                      state.loadingModal,
-                      { key: uuid(), isOpen: false, text: '' }
-                    )
+                      state.loadingModal, {
+                      key: uuid(),
+                      isOpen: false,
+                      text: ''
+                    })
                   }));
                   return true;
                 }
@@ -189,15 +191,23 @@ class App extends React.Component {
   }
 
   openLoadingModal(text) {
-    this.setState(state => ({
-      loadingModal: Object.assign(
-        state.loadingModal, {
-        key: uuid(),
-        isOpen: true,
-        text: text,
-      }
-      )
-    }))
+    if (this.state.loadingModal.isOpen) {
+      this.setState(state => ({
+        loadingModal: Object.assign(
+          state.loadingModal, {
+          text: text,
+        })
+      }))
+    } else {
+      this.setState(state => ({
+        loadingModal: Object.assign(
+          state.loadingModal, {
+          key: uuid(),
+          isOpen: true,
+          text: text,
+        })
+      }))      
+    }
   }
 
   closeLoadingModal() {
@@ -205,10 +215,9 @@ class App extends React.Component {
       loadingModal: Object.assign(
         state.loadingModal, {
         key: uuid(),
-        isOpen: true,
+        isOpen: false,
         text: '',
-      }
-      )
+      })
     }))
   }
 

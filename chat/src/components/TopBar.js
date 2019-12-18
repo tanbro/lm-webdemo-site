@@ -1,7 +1,9 @@
 import React from 'react';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-
+// import 'jquery/dist/jquery.min.js'
+// import 'popper.js/dist/umd/popper.min.js'
+import 'bootstrap/dist/css/bootstrap.min.css'
+// import 'bootstrap/dist/js/bootstrap.min.js'
 
 class TopBar extends React.Component {
     render() {
@@ -9,7 +11,19 @@ class TopBar extends React.Component {
             <nav className="navbar fixed-top shadow navbar-dark bg-dark">
                 <img src={this.props.logo} alt="" className="rounded-circle" width="48" height="48"></img>
                 <span className="navbar-brand">{this.props.title}</span>
-                <button type="button" className="btn btm-sm btn-primary">选项</button>
+                <div className="btn-group">
+                    <button type="button"
+                        className="btn btm-sm btn-primary dropdown-toggle"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    >
+                        选项
+                    </button>
+                    <div className="dropdown-menu dropdown-menu-right">
+                        <button className="dropdown-item" type="button">重新加载</button>
+                        <div className="dropdown-divider"></div>
+                        <button className="dropdown-item" type="button">重置会话</button>
+                    </div>
+                </div>
             </nav>
 
         )
