@@ -40,14 +40,6 @@ class App extends React.Component {
     },
   }
 
-  setLoadingModal(options) {
-    this.setState(state => ({
-      loadingModal: Object.assign(
-        this.state.loadingModal,
-        Object.assign(options, { key: uuid() })
-      )
-    }));
-  }
 
 
   componentDidMount() {
@@ -55,85 +47,102 @@ class App extends React.Component {
     /// 重新初始化
     console.debug('重新初始化 ...')
 
-    const readInitStream = (readableStream) => {
-      const reader = readableStream.getReader();
-      const utf8decoder = new TextDecoder();
-      const chunks = []
-
-      return pump();
-
-      function pump() {
-        return reader.read().then(({ value, done }) => {
-          value = utf8decoder.decode(value)
-          console.debug("response-stream", value)
-          if (done) {
-            return chunks;
-          }
-          chunks.push(value);
-          return pump();
-        });
-      }
-    }
-
     fetch(serverUrl, {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      method: "POST",
       cache: 'no-cache',
-      mode: "cors",  // no-cors, cors, *same-origin
+      mode: "cors",
     })
       .then((response) => {
         if (!response.ok) {
-          this.setLoadingModal({ isOpen: false });
+          this.setState(state => ({
+            loadingModal: Object.assign(
+              state.loadingModal,
+              { isOpen: false, key: uuid() }
+            )
+          }));
           throw new Error('Network response was not ok.');
         }
         return response.body;
       })
       .then(
         (body) => {
-          this.setLoadingModal({ isOpen: false });
-          return readInitStream(body);
+          return (stream => {
+            // stream read
+            const reader = stream.getReader();
+            const utf8decoder = new TextDecoder();
+            const keys = ["id", "personality"];
+            const attrs = {};
+            let buf = "";
+
+            const pump = () => {
+              return reader.read().then(({ value, done }) => {
+                value = utf8decoder.decode(value);
+                console.debug("response-stream:", value);
+                buf += value;  // 缓冲下来，然后按照行进行处理
+                while (true) {
+                  let pos = buf.indexOf("\n");
+                  if (pos < 0) {
+                    break;
+                  }
+                  let line = buf.slice(0, pos).trim();
+                  buf = buf.slice(pos + 1)
+                  if (!line) {
+                    break;
+                  }
+                  let parts = line.split(":");
+                  if (parts.length < 2) {
+                    break;
+                  }
+                  let k = parts[0].trim();
+                  let v = "";
+                  if (keys.indexOf(k) >= 0) {
+                    v = parts.slice(1).join(":");
+                    v = v.trim();
+                    if (!v) {
+                      break;
+                    }
+                    attrs[k] = v;
+                  }
+                }
+
+                // response 结束！
+                if (done) {
+                  // 将 personality 作为一个假的对话
+                  this.state.speechData.history.push({
+                    text: attrs.personality
+                  })
+                  // do render
+                  this.setState(state => ({
+                    // 更新对话历史列表
+                    speechData: Object.assign(state.speechData, attrs),
+                    // 关闭 loading modal
+                    loadingModal: Object.assign(
+                      state.loadingModal,
+                      { isOpen: false, key: uuid() }
+                    )
+                  }));
+                  return true;
+                }
+
+                ///
+                return pump();
+              });
+            };
+
+            return pump();
+
+          })(body)
         },
         (error) => {
-          this.setLoadingModal({ isOpen: false });
+          this.setState(state => ({
+            loadingModal: Object.assign(
+              state.loadingModal,
+              { isOpen: false, key: uuid() }
+            )
+          }));
           console.error('fetch failed', error);
         }
       )
-      .then(chunks => {  /// 读取返回的 pid 和 personality
-        const keys = ['id', 'personality'];
-        const attrs = {};
-        const txt = chunks.join("").trim();
-        const lines = txt.split("\n");
-        lines.forEach(line => {
-          if (line) {
-            line = line.trim()
-            if (!line) {
-              return;
-            }
-            let parts = line.split(":");
-            if (parts.length < 2) {
-              return;
-            }
-            let k = parts[0].trim();
-            let v = "";
-            if (keys.indexOf(k) >= 0) {
-              v = parts.slice(1).join(":");
-              v = v.trim();
-              if (!v) {
-                throw new Error(`Wrong chunk response string from server: ${line}`);
-              }
-              attrs[k] = v;
-            }
-          }
-        });
-
-        // 将 personality 作为一个假的对话
-        this.state.speechData.history.push({
-          text: attrs.personality
-        })
-        // reader
-        this.setState(state => ({
-          speechData: Object.assign(this.state.speechData, attrs)
-        }));
-      })
   }
 
   handleInputMessageSubmit(value) {
@@ -147,7 +156,7 @@ class App extends React.Component {
     })
     // reader
     this.setState(state => ({
-      speechData: this.state.speechData
+      speechData: state.speechData
     }));
 
     // 请求服务器的答复
@@ -171,7 +180,7 @@ class App extends React.Component {
           })
           // reader
           this.setState(state => ({
-            speechData: this.state.speechData
+            speechData: state.speechData
           }));
         },
         (error) => {

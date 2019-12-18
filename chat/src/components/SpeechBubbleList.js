@@ -11,10 +11,14 @@ class SpeechBubbleList extends React.Component {
     }
 
     render() {
+        // const itemsDom = this.props.data.map((m, i) =>{
+        //     const ref = React.createRef();
+        //     return <SpeechBubble key={i} ref={ref} data={m}></SpeechBubble>
+        // });
         const itemsDom = this.props.data.map((m, i) =>{
-            const ref = React.createRef();
-            return <SpeechBubble key={i} ref={ref} data={m}></SpeechBubble>
+            return <SpeechBubble key={i} data={m}></SpeechBubble>
         });
+
         return (
             <div className="d-flex flex-column mb-3">
                 <div className="p-5"></div>
