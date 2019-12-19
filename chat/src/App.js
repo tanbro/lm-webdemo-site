@@ -57,7 +57,7 @@ class App extends React.Component {
         if (!response.ok) {
           // TODO: 错误处理
           this.closeLoadingModal()
-          throw new Error('Network response was not ok.');
+          throw new Error(response.statusText);
         }
         return response.body;
       })
@@ -104,23 +104,27 @@ class App extends React.Component {
 
                 // response 结束！
                 if (done) {
-                  // 将 personality 作为一个假的对话
-                  this.state.speechData.history = [{
-                    text: attrs.personality
-                  }]
                   console.debug('重置 chat:', attrs)
                   // do render
-                  this.setState(state => ({
+                  this.setState(state => {
                     // 更新对话历史列表
-                    speechData: Object.assign(state.speechData, attrs),
+                    // 将 personality 作为一个假的对话
+                    state.speechData.history = [{
+                      text: attrs.personality
+                    }]
+                    state.speechData = Object.assign(state.speechData, attrs)
                     // 关闭 loading modal
-                    loadingModal: Object.assign(
+                    state.LoadingModal = Object.assign(
                       state.loadingModal, {
                       key: uuid(),
                       isOpen: false,
                       text: ''
                     })
-                  }));
+                    return {
+                      speechData: state.speechData,
+                      loadingModal: state.LoadingModal
+                    }
+                  });
                   return true;
                 }
 
@@ -135,7 +139,7 @@ class App extends React.Component {
         },
         (err) => {
           this.closeLoadingModal()
-          console.error('fetch failed', err);
+          throw new Error(err);
         }
       )
   }
@@ -154,6 +158,7 @@ class App extends React.Component {
         if (!response.ok) {
           //TODO: 错误处理
           this.closeLoadingModal()
+          throw new Error(response.statusText)
         } else {
           return response.json()
         }
@@ -161,7 +166,6 @@ class App extends React.Component {
       .then(
         result => {
           /// 将历史对话数据放上去
-          console.log('reattach chat:', result)
           let chat = result
           let history = [{
             text: chat.personality
@@ -233,6 +237,7 @@ class App extends React.Component {
       .then(response => {
         if (!response.ok) {
           this.closeLoadingModal()
+          throw new Error(response.statusText)
         } else {
           return response.json()
         }
@@ -292,8 +297,8 @@ class App extends React.Component {
         .then(response => {
           if (!response.ok) {
             /// TODO: response 错误 status 处理
-            reject(new Error(response.statusText))
-            return
+            reject()
+            throw new Error(response.statusText)
           }
           return response.json()
         })
