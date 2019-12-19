@@ -38,6 +38,10 @@ class App extends React.Component {
     },
   }
 
+  componentDidMount() {
+    this.getChat()
+  }
+
   resetChat() {
     console.info('resetChat')
 
@@ -191,6 +195,49 @@ class App extends React.Component {
       )
   }
 
+  clearChat() {
+    console.info('clearChat:')
+
+    this.openLoadingModal('清空会话历史')
+
+    let url = `${apiUrl}/${this.state.speechData.id}/clear`
+    fetch(url, {
+      method: 'POST',
+      cache: 'no-cache',
+      mode: 'cors',
+    })
+      .then(response => {
+        if (!response.ok) {
+          //TODO: 错误处理
+          this.closeLoadingModal()
+          throw new Error(response.statusText)
+        } else {
+          return response.arrayBuffer()
+        }
+      })
+      .then(
+        _ => {
+          /// 将历史对话数据清空
+          this.setState(state => ({
+            speechData: Object.assign(
+              state.speechData, {
+              history: []
+            }),
+            loadingModal: Object.assign(
+              state.loadingModal, {
+              isOpen: false,
+              text: ''
+            })
+          }))
+        },
+        err => {
+          //TODO: 错误处理
+          this.closeLoadingModal()
+          throw new Error(err)
+        }
+      )
+  }
+
   openLoadingModal(text) {
     this.setState(state => ({
       loadingModal: Object.assign(
@@ -217,25 +264,25 @@ class App extends React.Component {
       cache: 'no-cache',
       mode: 'cors',
     })
-    .then(response=>{
-      if (!response.ok) {
-        this.closeLoadingModal()
-        throw new Error(response.statusText)
-      } else {
-        return response.json()
-      }
-    })
-    .then(
-      result=>{
-        Object.assign(this.config, result)
-        this.getChat()
-      },
-      err=>{
-        //TODO: 错误处理
-        this.closeLoadingModal()
-        throw new Error(err)
-      }
-    )
+      .then(response => {
+        if (!response.ok) {
+          this.closeLoadingModal()
+          throw new Error(response.statusText)
+        } else {
+          return response.json()
+        }
+      })
+      .then(
+        result => {
+          Object.assign(this.config, result)
+          this.getChat()
+        },
+        err => {
+          //TODO: 错误处理
+          this.closeLoadingModal()
+          throw new Error(err)
+        }
+      )
   }
 
   getChat() {
@@ -269,10 +316,6 @@ class App extends React.Component {
           throw new Error(err)
         }
       )
-  }
-
-  componentDidMount() {
-    this.getChat()
   }
 
   handleInputMessageSubmit(value) {
@@ -338,6 +381,8 @@ class App extends React.Component {
       this.getChat()
     } else if (data.option === 'reset') {
       this.resetChat()
+    } else if (data.option === 'clear') {
+      this.clearChat()
     } else {
       throw new Error(`Unknown OptionMenu: ${data.option}`)
     }

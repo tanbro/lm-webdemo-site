@@ -40,12 +40,22 @@ class TopBar extends React.Component {
                         <button className="dropdown-item" type="button"
                             data-option='reload'
                             onClick={this.handleMenuItemItemClick}
-                        >重新加载</button>
+                        >
+                            重新加载当前会话
+                        </button>
+                        <button className="dropdown-item" type="button"
+                            data-option='clear'
+                            onClick={this.handleMenuItemItemClick}
+                        >
+                            清空当前会话历史
+                        </button>
                         <div className="dropdown-divider"></div>
                         <button className="dropdown-item" type="button"
                             data-option='reset'
                             onClick={this.handleMenuItemItemClick}
-                        >重置会话</button>
+                        >
+                            重置会话(警告: 将耗费较长时间)
+                        </button>
                     </div>
                 </div>
             </nav>
