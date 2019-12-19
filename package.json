@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "description": "我们的语言模型的 Demo Web-Site",
   "main": "index.js",
-  "scripts": {
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tanbro/lm-webdemo-site.git"
@@ -14,5 +13,8 @@
   "bugs": {
     "url": "https://github.com/tanbro/lm-webdemo-site/issues"
   },
-  "homepage": "https://github.com/tanbro/lm-webdemo-site#readme"
+  "homepage": "https://github.com/tanbro/lm-webdemo-site#readme",
+  "dependencies": {
+    "uuid": "^3.3.3"
+  }
 }

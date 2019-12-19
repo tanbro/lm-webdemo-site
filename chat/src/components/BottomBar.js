@@ -51,7 +51,7 @@ class CommonPhraseSelectModal extends React.Component {
         ))
 
         return (
-            <Modal isOpen={props.isOpen} toggle={this.handleClose} returnFocusAfterClose={false}>
+            <Modal isOpen={props.isOpen} toggle={this.handleClose}>
                 <ModalHeader close={closeBtn}>选择常用短语</ModalHeader>
                 <ModalBody width='50%'>
                     <div className="list-group mh-50 overflow-auto d-inline-block">
@@ -72,8 +72,6 @@ class BottomBar extends React.Component {
     constructor(props) {
         super(props)
 
-        this.inputRef = React.createRef()
-
         // This binding is necessary to make `this` work in the callback
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -86,11 +84,6 @@ class BottomBar extends React.Component {
         isSending: false,
         isOpenCommonPhraseSelectModal: false
     };
-
-    focusInput() {
-        const element = this.inputRef.current
-        element.focus()
-    }
 
     handleChange(event) {
         event.preventDefault();
@@ -111,13 +104,11 @@ class BottomBar extends React.Component {
                         value: '',
                         isSending: false
                     })
-                    this.focusInput()
                 },
                 (_) => {
                     this.setState({
                         isSending: false
                     })
-                    this.focusInput()
                 }
             )
     }
@@ -139,7 +130,6 @@ class BottomBar extends React.Component {
                 isOpenCommonPhraseSelectModal: false
             })
         }
-        this.focusInput()
     }
 
     render() {
@@ -152,7 +142,6 @@ class BottomBar extends React.Component {
                     <form className='form-inline' onSubmit={this.handleSubmit}>
                         <div className='input-group'>
                             <input type='text' className='form-control'
-                                ref={this.inputRef}
                                 value={state.value}
                                 disabled={state.isSending}
                                 onChange={this.handleChange}

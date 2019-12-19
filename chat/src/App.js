@@ -349,7 +349,7 @@ class App extends React.Component {
     return (
       <div className='App'>
         <LoadingModal isOpen={state.loadingModal.isOpen} text={state.loadingModal.text}></LoadingModal>
-        <TopBar logo={logo} title='Chat Demo' onMenuItemClick={this.handleOptionMenuClick}></TopBar>
+        <TopBar logo={logo} title='话媒心理' onMenuItemClick={this.handleOptionMenuClick}></TopBar>
         <SpeechBubbleList key={state.speechData.id} data={state.speechData.history}></SpeechBubbleList>
         <BottomBar onSubmit={this.handleInputMessageSubmit}></BottomBar>
       </div>
