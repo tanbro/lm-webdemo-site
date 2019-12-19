@@ -1,5 +1,4 @@
 import React from 'react'
-import uuid from 'uuid/index'
 
 import 'jquery/dist/jquery.min.js'
 import 'popper.js/dist/umd/popper.min.js'
@@ -29,7 +28,7 @@ class App extends React.Component {
   state = {
     loadingModal: {
       isOpen: true,
-      text: '从服务器加载会话数据 ...',
+      text: '',
     },
     speechData: {
       id: null,
