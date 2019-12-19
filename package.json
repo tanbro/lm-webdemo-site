@@ -1,0 +1,18 @@
+{
+  "name": "lm-webdemo-site",
+  "version": "1.0.0",
+  "description": "我们的语言模型的 Demo Web-Site",
+  "main": "index.js",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tanbro/lm-webdemo-site.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tanbro/lm-webdemo-site/issues"
+  },
+  "homepage": "https://github.com/tanbro/lm-webdemo-site#readme"
+}
