@@ -10,15 +10,16 @@ import BottomBar from './components/BottomBar'
 import SpeechBubbleList from './components/SpeechBubbleList'
 import LoadingModal from './components/LoadingModal'
 
-import './App.css';
-import logo from './logo.svg';
+import './App.css'
+import logo from './logo.svg'
 
-const serverUrl = 'http://10.1.1.174:8090/chat';
+
+const apiUrl = process.env.REACT_APP_API_URL
 
 class App extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
     // Bind the this context to the handler function
     this.handleInputMessageSubmit = this.handleInputMessageSubmit.bind(this)
@@ -33,13 +34,8 @@ class App extends React.Component {
     speechData: {
       id: null,
       personality: '',
-      history: [
-        // { text: 'Hello' }, { 'text': 'Hi!', 'isReverse': true }
-      ]
+      history: []
     },
-    alerts: [
-
-    ]
   }
 
   resetChat() {
@@ -47,7 +43,7 @@ class App extends React.Component {
 
     this.openLoadingModal('重置会话 ...')
 
-    fetch(serverUrl, {
+    fetch(apiUrl, {
       method: 'POST',
       cache: 'no-cache',
       mode: 'cors',
@@ -56,48 +52,48 @@ class App extends React.Component {
         if (!response.ok) {
           // TODO: 错误处理
           this.closeLoadingModal()
-          throw new Error(response.statusText);
+          throw new Error(response.statusText)
         }
-        return response.body;
+        return response.body
       })
       .then(
         (body) => {
           return (stream => {
             // stream read
-            const reader = stream.getReader();
-            const utf8decoder = new TextDecoder();
-            const keys = ['id', 'personality'];
-            const attrs = {};
-            let buf = '';
+            const reader = stream.getReader()
+            const utf8decoder = new TextDecoder()
+            const keys = ['id', 'personality']
+            const attrs = {}
+            let buf = ''
 
             const pump = () => {
               return reader.read().then(({ value, done }) => {
-                value = utf8decoder.decode(value);
-                console.debug('response-stream:', value);
-                buf += value;  // 缓冲下来，然后按照行进行处理
+                value = utf8decoder.decode(value)
+                console.debug('response-stream:', value)
+                buf += value  // 缓冲下来，然后按照行进行处理
                 while (true) {
-                  let pos = buf.indexOf('\n');
+                  let pos = buf.indexOf('\n')
                   if (pos < 0) {
-                    break;
+                    break
                   }
-                  let line = buf.slice(0, pos).trim();
+                  let line = buf.slice(0, pos).trim()
                   buf = buf.slice(pos + 1)
                   if (!line) {
-                    break;
+                    break
                   }
-                  let parts = line.split(':');
+                  let parts = line.split(':')
                   if (parts.length < 2) {
-                    break;
+                    break
                   }
-                  let k = parts[0].trim();
-                  let v = '';
+                  let k = parts[0].trim()
+                  let v = ''
                   if (keys.indexOf(k) >= 0) {
-                    v = parts.slice(1).join(':');
-                    v = v.trim();
+                    v = parts.slice(1).join(':')
+                    v = v.trim()
                     if (!v) {
-                      break;
+                      break
                     }
-                    attrs[k] = v;
+                    attrs[k] = v
                   }
                 }
 
@@ -122,22 +118,22 @@ class App extends React.Component {
                       speechData: state.speechData,
                       loadingModal: state.LoadingModal
                     }
-                  });
-                  return true;
+                  })
+                  return true
                 }
 
                 ///
-                return pump();
-              });
-            };
+                return pump()
+              })
+            }
 
-            return pump();
+            return pump()
 
           })(body)
         },
         (err) => {
           this.closeLoadingModal()
-          throw new Error(err);
+          throw new Error(err)
         }
       )
   }
@@ -147,7 +143,7 @@ class App extends React.Component {
 
     this.openLoadingModal('恢复会话数据 ...')
 
-    let url = `${serverUrl}/${chat.id}`
+    let url = `${apiUrl}/${chat.id}`
     fetch(url, {
       cache: 'no-cache',
       mode: 'cors',
@@ -215,10 +211,37 @@ class App extends React.Component {
     }))
   }
 
+  init() {
+    this.openLoadingModal('读取配置信息 ...')
+    fetch('config.json', {
+      cache: 'no-cache',
+      mode: 'cors',
+    })
+    .then(response=>{
+      if (!response.ok) {
+        this.closeLoadingModal()
+        throw new Error(response.statusText)
+      } else {
+        return response.json()
+      }
+    })
+    .then(
+      result=>{
+        Object.assign(this.config, result)
+        this.getChat()
+      },
+      err=>{
+        //TODO: 错误处理
+        this.closeLoadingModal()
+        throw new Error(err)
+      }
+    )
+  }
+
   getChat() {
     this.openLoadingModal('加载会话信息 ...')
 
-    fetch(serverUrl, {
+    fetch(apiUrl, {
       cache: 'no-cache',
       mode: 'cors',
     })
@@ -271,7 +294,7 @@ class App extends React.Component {
       }))
 
       // 请求服务器的答复
-      fetch(`${serverUrl}/${this.state.speechData.id}/input`, {
+      fetch(`${apiUrl}/${this.state.speechData.id}/input`, {
         method: 'POST',
         cache: 'no-cache',
         mode: 'cors',
@@ -310,12 +333,13 @@ class App extends React.Component {
   }
 
 
-  handleOptionMenuClick(evt) {
-    const optName = evt.target.dataset.option
-    if (optName === 'reload') {
+  handleOptionMenuClick(data) {
+    if (data.option === 'reload') {
       this.getChat()
-    } else {
+    } else if (data.option === 'reset') {
       this.resetChat()
+    } else {
+      throw new Error(`Unknown OptionMenu: ${data.option}`)
     }
   }
 

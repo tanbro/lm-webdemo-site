@@ -17,7 +17,10 @@ class TopBar extends React.Component {
     handleMenuItemItemClick(evt) {
         const handler = this.props.onMenuItemClick
         if (handler) {
-            handler(evt)
+            const data = {
+                option: evt.target.dataset.option
+            }
+            handler(data)
         }
     }
 
