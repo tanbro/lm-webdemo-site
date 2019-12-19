@@ -8,8 +8,8 @@ class SpeechBubbleList extends React.Component {
 
     render() {
         const domChildren = this.props.data.map(
-            (m, i) => (
-                <SpeechBubble key={i} data={m}></SpeechBubble>
+            value => (
+                <SpeechBubble data={value}></SpeechBubble>
             )
         )
 

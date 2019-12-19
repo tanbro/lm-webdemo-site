@@ -116,7 +116,6 @@ class App extends React.Component {
                     // 关闭 loading modal
                     state.LoadingModal = Object.assign(
                       state.loadingModal, {
-                      key: uuid(),
                       isOpen: false,
                       text: ''
                     })
@@ -183,9 +182,10 @@ class App extends React.Component {
               history: history,
             },
             loadingModal: Object.assign(
-              state.loadingModal,
-              { key: uuid(), isOpen: false, text: '' }
-            )
+              state.loadingModal, {
+              isOpen: false,
+              text: ''
+            })
           }))
         },
         err => {
@@ -197,30 +197,19 @@ class App extends React.Component {
   }
 
   openLoadingModal(text) {
-    if (this.state.loadingModal.isOpen) {
-      this.setState(state => ({
-        loadingModal: Object.assign(
-          state.loadingModal, {
-          text: text,
-        })
-      }))
-    } else {
-      this.setState(state => ({
-        loadingModal: Object.assign(
-          state.loadingModal, {
-          key: uuid(),
-          isOpen: true,
-          text: text,
-        })
-      }))
-    }
+    this.setState(state => ({
+      loadingModal: Object.assign(
+        state.loadingModal, {
+        isOpen: true,
+        text: text,
+      })
+    }))
   }
 
   closeLoadingModal() {
     this.setState(state => ({
       loadingModal: Object.assign(
         state.loadingModal, {
-        key: uuid(),
         isOpen: false,
         text: '',
       })
@@ -336,7 +325,7 @@ class App extends React.Component {
 
     return (
       <div className='App'>
-        <LoadingModal key={state.loadingModal.key} isOpen={state.loadingModal.isOpen} text={state.loadingModal.text}></LoadingModal>
+        <LoadingModal isOpen={state.loadingModal.isOpen} text={state.loadingModal.text}></LoadingModal>
         <TopBar logo={logo} title='Chat Demo' onMenuItemClick={this.handleOptionMenuClick}></TopBar>
         <SpeechBubbleList key={state.speechData.id} data={state.speechData.history}></SpeechBubbleList>
         <BottomBar onSubmit={this.handleInputMessageSubmit}></BottomBar>
