@@ -1,13 +1,11 @@
 import React from 'react';
 
-import uuid from 'uuid'
-
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import logo from '../logo.svg';
 import './SpeechBubble.css';
 
-const gravatarUrl = `http://gravatar.com/avatar/${uuid()}?d=wavatar`
+const gravatarUrl = `https://www.gravatar.com/avatar/?d=mp`
 
 class SpeechBubble extends React.Component {
     constructor(props) {

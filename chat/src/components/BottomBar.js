@@ -7,28 +7,45 @@ import './BottomBar.css'
 
 
 
-class CommonPhraseSelectModal extends React.Component {
+class ExampleSelectModal extends React.Component {
     constructor(props) {
         super(props)
         this.handleClose = this.handleClose.bind(this)
     }
 
     state = {
-        phrases: [
-            '婚姻的定义是：“得到一个人，失去全世界。”',
-            '都说证书具有一定的含金量，我把证书拿去烧了，但铁屑也没有找着！',
-            '系统居然怀疑我灌水，我身边又没有水龙头。哦…明白了，身上有一个…',
-            '有没有听过“大猪说有，小猪说没有”的故事？',
-            '哥哥是灰狼，妹妹是绵羊；哥家不缺粮，想你做新娘；“砰”的一声响，哥哥把命丧；“猎人”举枪笑，看看是你娘！',
-            '网上总说女人如衣服，我却郁闷了，找件合适的衣服怎么就那么难呢！',
-            '我不想再影响你的前途，你可以找到比我更好的人……我不想再欺骗你和自己，希望你原谅我吧！我会永远祝福你的。'
-        ],
+        examples: [],
+    }
+
+    componentDidMount() {
+        if (process.env.NODE_ENV === 'development') {
+            this.setState({
+                examples: [
+                    "今天老板狠狠骂了我，就因为不太重要的事情，我也和他顶了几句嘴，真窝火，我想该不该辞职，此处不留爷自有留爷处。我该怎么办，还是份不错的工作，收入还好，就是一直做的不顺心。脾气感觉也越来越不好。",
+                    "我恨你，可是我还爱着你，我该怎么办？",
+                    "感情方面。我跟我男朋友认识一年多了恋爱半年今天把我常在心里的秘密告诉他了我是一个结过婚的女人而且带着一个九岁的孩子他一下子接受不了这个事实所以我们决定分开一段时间让他好好想想可是我又怕他想不开不要我了。",
+                    "不喜欢父母，不愿意跟他们相处。我是18岁女生。父母属于那种很容易担心的人，无论发生了什么事情到他们眼里就是一个新的需要解决的问题，印象中从没看到父母之间谈话开怀大笑过，他们永远在谈论眼前发生的事情该怎么处理，有时谈着谈着就吵起来。跟他们在一起我感到紧张。我平常干什么他们都必须要知道，如果做没有经过他们同意的事，他们就以担心我的安全为由开展心理教育，我坚持自己的观点就被说成“什么话都听不进去”，说我的态度有问题，但我却认为是他们过分担心了。生活中父母对我很好，而我却似乎处处给他们添麻烦，觉得很对不起他们。我现在感到进退两难，反抗也不是，顺从也不是，我该怎么办？"
+                ]
+            })
+
+        } else if (process.env.NODE_ENV === 'production') {
+            fetch('data/examples.json')
+                .then(response => response.json())
+                .then(result => {
+                    this.setState({
+                        examples: result
+                    })
+                })
+
+        } else {
+            throw new Error(`Un-support NODE_ENV ${process.env.NODE_ENV}`)
+        }
     }
 
     handleClose(event) {
         const handle = this.props.onClose
         if (handle) {
-            const value = this.state.phrases[event.target.dataset.selectedIndex]
+            const value = this.state.examples[event.target.dataset.selectedIndex]
             handle(value)
         }
     }
@@ -41,8 +58,8 @@ class CommonPhraseSelectModal extends React.Component {
             <button className="close" onClick={this.handleClose}>&times;</button>
         )
 
-        const domPhraseItems = state.phrases.map((value, index) => (
-            <button key={index} className='list-group-item text-left'
+        const domPhraseItems = state.examples.map((value, index) => (
+            <button key={index} className='list-group-item text-left w-100'
                 data-selected-index={index}
                 onClick={this.handleClose}
             >
@@ -52,7 +69,7 @@ class CommonPhraseSelectModal extends React.Component {
 
         return (
             <Modal isOpen={props.isOpen} toggle={this.handleClose}>
-                <ModalHeader close={closeBtn}>选择常用短语</ModalHeader>
+                <ModalHeader close={closeBtn}>选择要发送的例句</ModalHeader>
                 <ModalBody width='50%'>
                     <div className="list-group mh-50 overflow-auto d-inline-block">
                         {domPhraseItems}
@@ -121,7 +138,7 @@ class BottomBar extends React.Component {
 
     handleCommonPhraseModalClose(value) {
         if (value) {
-            this.setState(state=>({
+            this.setState(state => ({
                 'value': state.value.concat(value),
                 isOpenCommonPhraseSelectModal: false
             }))
@@ -137,7 +154,7 @@ class BottomBar extends React.Component {
 
         return (
             <div>
-                <CommonPhraseSelectModal isOpen={state.isOpenCommonPhraseSelectModal} onClose={this.handleCommonPhraseModalClose}></CommonPhraseSelectModal>
+                <ExampleSelectModal isOpen={state.isOpenCommonPhraseSelectModal} onClose={this.handleCommonPhraseModalClose}></ExampleSelectModal>
                 <nav className='navbar border-top fixed-bottom navbar-light bg-light'>
                     <form className='form-inline' onSubmit={this.handleSubmit}>
                         <div className='input-group'>
@@ -148,17 +165,17 @@ class BottomBar extends React.Component {
                                 placeholder='输入您要发送的内容'>
                             </input>
                             <div className='input-group-append'>
-                                <button type='submit' value='Submit' className='x-btn-submit btn btn-outline-secondary text-dark' disabled={state.isSending}>
-                                    <span className={`${state.isSending ? 'd-none' : ''}`}>发 送</span>
+                                <button type='submit' value='Submit' className='x-btn-submit btn btn-sm btn-outline-secondary text-dark' disabled={state.isSending}>
+                                    <span className={`${state.isSending ? 'd-none' : ''}`}>发送</span>
                                     <span className={`spinner-grow spinner-grow-sm ${state.isSending ? '' : 'd-none'}`}
                                         role="status" aria-hidden="true">
                                     </span>
                                 </button>
                             </div>
-                            <button className='btn btn-outline-secondary text-dark'
+                            <button className='btn btn-sm btn-outline-secondary text-dark'
                                 onClick={this.handleCommonPhraseButtonClick}
                             >
-                                常用语
+                                例句
                         </button>
                         </div>
                     </form>
