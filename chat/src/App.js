@@ -31,6 +31,7 @@ class App extends React.Component {
   state = {
     loadingModal: {
       isOpen: true,
+      title: '',
       text: '',
     },
     chatProc: {
@@ -91,6 +92,14 @@ class App extends React.Component {
                   if (!line) {
                     break
                   }
+                  // 刷新 loading modal
+                  this.setState(state => ({
+                    loadingModal: Object.assign(
+                      state.loadingModal, {
+                      text: line
+                    })
+                  }))
+                  // 继续解析
                   let parts = line.split(':')
                   if (parts.length < 2) {
                     break
@@ -243,11 +252,12 @@ class App extends React.Component {
       )
   }
 
-  openLoadingModal(text) {
+  openLoadingModal(title = '', text = '') {
     this.setState(state => ({
       loadingModal: Object.assign(
         state.loadingModal, {
         isOpen: true,
+        title: title,
         text: text,
       })
     }))
@@ -258,6 +268,7 @@ class App extends React.Component {
       loadingModal: Object.assign(
         state.loadingModal, {
         isOpen: false,
+        title: '',
         text: '',
       })
     }))
@@ -404,7 +415,7 @@ class App extends React.Component {
 
     return (
       <div className='App'>
-        <LoadingModal isOpen={state.loadingModal.isOpen} text={state.loadingModal.text}></LoadingModal>
+        <LoadingModal isOpen={state.loadingModal.isOpen} title={state.loadingModal.title} text={state.loadingModal.text}></LoadingModal>
         <TopBar logo={logo} title='话媒心理' onMenuItemClick={this.handleOptionMenuClick}></TopBar>
         <SpeechBubbleList data={state.chatProc}></SpeechBubbleList>
         <BottomBar onSubmit={this.handleInputMessageSubmit}></BottomBar>
