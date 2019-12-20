@@ -12,21 +12,21 @@ class LoadingModal extends React.Component {
             <div>
                 <Modal isOpen={props.isOpen} centered={true} modalTransition={{ timeout: 500 }} backdropTransition={{ timeout: 1000 }}>
                     <ModalHeader>
-                        <div className="d-flex justify-content-center">
-                            <div className="p-2">
-                                <div className="spinner-grow spinner-grow-xl" role="status"></div>
+                        <div className='d-flex justify-content-center'>
+                            <div className='p-2'>
+                                <div className='spinner-grow spinner-grow-xl' role='status'></div>
                             </div>
-                            <div className="p-2">
-                                <p className='text-xl'>{props.title}</p>
+                            <div className='p-2 text-xl'>
+                                {props.title}
                             </div>
                         </div>
                     </ModalHeader>
                     <ModalBody>
                         <div className='container'>
-                            <div className="row">
-                                <p className="col text-sm text-muted text-nowrap text-truncate text-monospace">
+                            <div className='row'>
+                                <div className='col text-sm text-muted text-nowrap text-truncate text-monospace'>
                                     <small>{props.text}</small>
-                                </p>
+                                </div>
                             </div>
                         </div>
                     </ModalBody>

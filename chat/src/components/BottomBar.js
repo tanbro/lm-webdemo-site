@@ -97,13 +97,28 @@ class BottomBar extends React.Component {
 
     state = {
         value: '',
+        rows: 1,
         isSending: false,
         isOpenCommonPhraseSelectModal: false
     };
 
     handleChange(event) {
         event.preventDefault();
-        this.setState({ value: event.target.value });
+        const value = event.target.value
+        const lines = value.split(/\r\n|\r|\n/)
+        const linesLength = lines.length
+        let rows = 1
+        if (linesLength < 1) {
+            rows = 1
+        } else if (linesLength > 2) {
+            rows = 3
+        } else {
+            rows = linesLength
+        }
+        this.setState({
+            rows: rows,
+            value: value
+        })
     }
 
     handleSubmit(event) {
@@ -157,12 +172,15 @@ class BottomBar extends React.Component {
                 <nav className='navbar border-top fixed-bottom navbar-light bg-light'>
                     <form className='form-inline' onSubmit={this.handleSubmit}>
                         <div className='input-group'>
-                            <input type='text' className='form-control'
+                            <textarea className='form-control'
+                                required={true}
+                                maxLength={256}
+                                rows={state.rows}
                                 value={state.value}
                                 disabled={state.isSending}
                                 onChange={this.handleChange}
                                 placeholder='输入您要发送的内容'>
-                            </input>
+                            </textarea>
                             <div className='input-group-append'>
                                 <button type='submit' value='Submit' className='x-btn-submit btn btn-sm btn-outline-secondary text-dark' disabled={state.isSending}>
                                     <span className={`${state.isSending ? 'd-none' : ''}`}>发送</span>
@@ -175,7 +193,7 @@ class BottomBar extends React.Component {
                                 onClick={this.handleCommonPhraseButtonClick}
                             >
                                 例句
-                        </button>
+                            </button>
                         </div>
                     </form>
                 </nav>
