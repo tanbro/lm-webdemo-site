@@ -7,9 +7,17 @@ import SpeechBubble from './SpeechBubble'
 class SpeechBubbleList extends React.Component {
 
     render() {
-        const domChildren = this.props.data.map(
+        const props = this.props
+
+        const domChildren = props.data.history.map(
             (value, index) => (
-                <SpeechBubble key={index} data={value}></SpeechBubble>
+                <SpeechBubble
+                    key={`${props.data.id}.${index}`}
+                    data={value}
+                    chatId={props.data.id}
+                    hashKey={props.data.hashKey}
+                >
+                </SpeechBubble>
             )
         )
 

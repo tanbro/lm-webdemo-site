@@ -6,7 +6,6 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './BottomBar.css'
 
 
-
 class ExampleSelectModal extends React.Component {
     constructor(props) {
         super(props)

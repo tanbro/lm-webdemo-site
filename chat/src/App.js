@@ -5,6 +5,8 @@ import 'popper.js/dist/umd/popper.min.js'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min.js'
 
+import md5 from 'md5'
+
 import TopBar from './components/TopBar'
 import BottomBar from './components/BottomBar'
 import SpeechBubbleList from './components/SpeechBubbleList'
@@ -31,8 +33,12 @@ class App extends React.Component {
       isOpen: true,
       text: '',
     },
-    speechData: {
-      id: null,
+    chatProc: {
+      hashKey: null,
+      program: null,
+      cwd: null,
+      args: null,
+      key: null,
       personality: '',
       history: []
     },
@@ -52,7 +58,7 @@ class App extends React.Component {
       cache: 'no-cache',
       mode: 'cors',
     })
-      .then((response) => {
+      .then(response => {
         if (!response.ok) {
           // TODO: 错误处理
           this.closeLoadingModal()
@@ -61,19 +67,19 @@ class App extends React.Component {
         return response.body
       })
       .then(
-        (body) => {
+        body => {
           return (stream => {
             // stream read
             const reader = stream.getReader()
             const utf8decoder = new TextDecoder()
-            const keys = ['id', 'personality']
+            const keys = ['id', 'personality', 'program', 'cwd', 'args']
             const attrs = {}
             let buf = ''
 
             const pump = () => {
               return reader.read().then(({ value, done }) => {
                 value = utf8decoder.decode(value)
-                console.debug('response-stream:', value)
+                console.debug('response-stream:', done, value)
                 buf += value  // 缓冲下来，然后按照行进行处理
                 while (true) {
                   let pos = buf.indexOf('\n')
@@ -103,15 +109,16 @@ class App extends React.Component {
 
                 // response 结束！
                 if (done) {
-                  console.debug('重置 chat:', attrs)
+                  attrs.hashKey = md5(attrs['args'] + attrs['cwd'] + attrs['program'])
                   // do render
                   this.setState(state => {
                     // 更新对话历史列表
                     // 将 personality 作为一个假的对话
-                    state.speechData.history = [{
-                      text: attrs.personality
+                    state.chatProc.history = [{
+                      text: attrs.personality,
+                      time: new Date()
                     }]
-                    state.speechData = Object.assign(state.speechData, attrs)
+                    state.chatProc = Object.assign(state.chatProc, attrs)
                     // 关闭 loading modal
                     state.LoadingModal = Object.assign(
                       state.loadingModal, {
@@ -119,7 +126,7 @@ class App extends React.Component {
                       text: ''
                     })
                     return {
-                      speechData: state.speechData,
+                      chatProc: state.chatProc,
                       loadingModal: state.LoadingModal
                     }
                   })
@@ -135,7 +142,7 @@ class App extends React.Component {
 
           })(body)
         },
-        (err) => {
+        err => {
           this.closeLoadingModal()
           throw new Error(err)
         }
@@ -164,22 +171,20 @@ class App extends React.Component {
       .then(
         result => {
           /// 将历史对话数据放上去
-          let chat = result
           let history = [{
-            text: chat.personality
+            text: result.personality
           }]
-          chat.history.forEach(m => {
+          result.history.forEach(m => {
             history.push({
               text: m.msg,
+              time: new Date(Date.parse(m.time)),
               isReverse: m.dir === 'input'
             })
           })
+          result.history = history
+          result.hashKey = md5(result['args'] + result['cwd'] + result['program'])
           this.setState(state => ({
-            speechData: {
-              id: chat.id,
-              personality: chat.personality,
-              history: history,
-            },
+            chatProc: result,
             loadingModal: Object.assign(
               state.loadingModal, {
               isOpen: false,
@@ -200,7 +205,7 @@ class App extends React.Component {
 
     this.openLoadingModal('清空会话历史')
 
-    let url = `${apiUrl}/${this.state.speechData.id}/clear`
+    let url = `${apiUrl}/${this.state.chatProc.id}/clear`
     fetch(url, {
       method: 'POST',
       cache: 'no-cache',
@@ -219,8 +224,8 @@ class App extends React.Component {
         _ => {
           /// 将历史对话数据清空
           this.setState(state => ({
-            speechData: Object.assign(
-              state.speechData, {
+            chatProc: Object.assign(
+              state.chatProc, {
               history: []
             }),
             loadingModal: Object.assign(
@@ -327,17 +332,20 @@ class App extends React.Component {
         return
       }
 
-      // 增加对话历史数据
-      this.state.speechData.history.push({
-        text: value,
-        isReverse: true,
+      this.setState(state => {
+        // 增加对话历史数据
+        state.chatProc.history.push({
+          text: value,
+          time: new Date(),
+          isReverse: true,
+        })
+        return {
+          chatProc: state.chatProc
+        }
       })
-      this.setState(state => ({
-        speechData: state.speechData
-      }))
 
       // 请求服务器的答复
-      fetch(`${apiUrl}/${this.state.speechData.id}/input`, {
+      fetch(`${apiUrl}/${this.state.chatProc.id}/input`, {
         method: 'POST',
         cache: 'no-cache',
         mode: 'cors',
@@ -357,17 +365,20 @@ class App extends React.Component {
           return response.json()
         })
         .then(
-          (result) => {
-            // 增加对话历史数据
-            this.state.speechData.history.push({
-              text: result.msg
+          result => {
+            this.setState(state => {
+              // 增加对话历史数据
+              this.state.chatProc.history.push({
+                text: result.msg,
+                time: new Date(),
+              })
+              return {
+                chatProc: state.chatProc
+              }
             })
-            this.setState(state => ({
-              speechData: state.speechData
-            }))
             resolve()
           },
-          (err) => {
+          err => {
             /// TODO: input 错误处理
             reject(err)
           }
@@ -395,7 +406,7 @@ class App extends React.Component {
       <div className='App'>
         <LoadingModal isOpen={state.loadingModal.isOpen} text={state.loadingModal.text}></LoadingModal>
         <TopBar logo={logo} title='话媒心理' onMenuItemClick={this.handleOptionMenuClick}></TopBar>
-        <SpeechBubbleList key={state.speechData.id} data={state.speechData.history}></SpeechBubbleList>
+        <SpeechBubbleList data={state.chatProc}></SpeechBubbleList>
         <BottomBar onSubmit={this.handleInputMessageSubmit}></BottomBar>
       </div>
     )
