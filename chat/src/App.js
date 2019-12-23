@@ -16,7 +16,7 @@ import './App.css'
 import logo from './logo.svg'
 
 
-const apiUrl = process.env.REACT_APP_API_URL
+const apiUrl = `${process.env.REACT_APP_API_SITE}/chat`
 
 class App extends React.Component {
 

@@ -20,7 +20,7 @@ class SpeechBubble extends React.Component {
 
     render() {
         const props = this.props
-        const avatarUrl = props.data.isReverse ? `https://www.gravatar.com/avatar/?d=mp` : `https://www.gravatar.com/avatar/${props.hashKey}?d=identicon`
+        const avatarUrl = props.data.isReverse ? `//www.gravatar.com/avatar/?d=mp` : `//www.gravatar.com/avatar/${props.hashKey}?d=identicon`
         const userName = props.data.isReverse ? null : `A.I. ${props.chatId}`
         const domTime = props.data.time ? (
             <small className='text-muted'>{props.data.time.toLocaleString(undefined, dateToStringLocaleOptions)}</small>
