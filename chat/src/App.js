@@ -1,9 +1,6 @@
 import React from 'react'
 
-import 'jquery/dist/jquery.min.js'
-import 'popper.js/dist/umd/popper.min.js'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap/dist/js/bootstrap.min.js'
 
 import md5 from 'md5'
 

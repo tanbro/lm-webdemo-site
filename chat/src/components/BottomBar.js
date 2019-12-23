@@ -164,7 +164,7 @@ class BottomBar extends React.Component {
                 <nav className='navbar border-top fixed-bottom navbar-light bg-light'>
                     <form className='form-inline' onSubmit={this.handleSubmit}>
                         <div className='input-group'>
-                            <textarea className='form-control overflow-hidden x-bottombar-textarea'
+                            <textarea className='form-control x-bottombar-textarea'
                                 required={true}
                                 maxLength='256'
                                 rows='1'
