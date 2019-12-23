@@ -231,11 +231,13 @@ class App extends React.Component {
       })
       .then(
         _ => {
-          /// 将历史对话数据清空
+          /// 将历史对话数据清空，但是留下一个假的 personality 作为开头句子
           this.setState(state => ({
             chatProc: Object.assign(
               state.chatProc, {
-              history: []
+              history: [{
+                text: state.chatProc.personality
+              }]
             }),
             loadingModal: Object.assign(
               state.loadingModal, {
