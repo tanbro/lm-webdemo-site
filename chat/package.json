@@ -22,8 +22,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy": "ossutil64 cp ./build oss://hm-files/lmdemo/chat --recursive --update",
-    "remove-deploy": "ossutil64 rm oss://hm-files/lmdemo/chat --recursive",
-    "build and deploy": "npm run build && npm run deploy"
+    "remove-deployment": "ossutil64 rm oss://hm-files/lmdemo/chat --recursive --force",
+    "build-deploy": "npm run build && npm run deploy"
   },
   "eslintConfig": {
     "extends": "react-app"
