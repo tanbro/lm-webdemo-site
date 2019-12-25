@@ -13,7 +13,7 @@ import './App.css'
 import logo from './logo.svg'
 
 
-const apiUrl = `${process.env.REACT_APP_API_SITE}/chat`
+const apiBaseUrl = `${process.env.REACT_APP_API_BASE_URL}`
 
 class App extends React.Component {
 
@@ -51,7 +51,7 @@ class App extends React.Component {
 
     this.openLoadingModal('重置会话 ...')
 
-    fetch(apiUrl, {
+    fetch(apiBaseUrl, {
       method: 'POST',
       cache: 'no-cache',
       mode: 'cors',
@@ -160,7 +160,7 @@ class App extends React.Component {
 
     this.openLoadingModal('恢复会话数据 ...')
 
-    let url = `${apiUrl}/${chat.id}`
+    let url = `${apiBaseUrl}/${chat.id}`
     fetch(url, {
       cache: 'no-cache',
       mode: 'cors',
@@ -211,7 +211,7 @@ class App extends React.Component {
 
     this.openLoadingModal('清空会话历史')
 
-    let url = `${apiUrl}/${this.state.chatProc.id}/clear`
+    let url = `${apiBaseUrl}/${this.state.chatProc.id}/clear`
     fetch(url, {
       method: 'POST',
       cache: 'no-cache',
@@ -303,7 +303,7 @@ class App extends React.Component {
   getChat() {
     this.openLoadingModal('加载会话信息 ...')
 
-    fetch(apiUrl, {
+    fetch(apiBaseUrl, {
       cache: 'no-cache',
       mode: 'cors',
     })
@@ -355,7 +355,7 @@ class App extends React.Component {
       })
 
       // 请求服务器的答复
-      fetch(`${apiUrl}/${this.state.chatProc.id}/input`, {
+      fetch(`${apiBaseUrl}/${this.state.chatProc.id}/input`, {
         method: 'POST',
         cache: 'no-cache',
         mode: 'cors',
