@@ -14,7 +14,5 @@
     "url": "https://github.com/tanbro/lm-webdemo-site/issues"
   },
   "homepage": "https://github.com/tanbro/lm-webdemo-site#readme",
-  "dependencies": {
-    "uuid": "^3.3.3"
-  }
+  "dependencies": {}
 }
