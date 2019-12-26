@@ -1,0 +1,9 @@
+.x-bottombar-textarea {
+    resize: none;
+    max-height: 6em;
+}
+
+.x-bottombar-submit {
+    min-width: 4em;
+    max-width: 4em;
+}

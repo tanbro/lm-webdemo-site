@@ -1,24 +1,20 @@
 {
   "name": "lm-webdemo-site",
   "version": "1.0.0",
-  "description": "our LM webdemo site",
-  "private": true,
+  "description": "我们的语言模型的 Demo Web-Site",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tanbro/lm-webdemo-site.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tanbro/lm-webdemo-site/issues"
+  },
+  "homepage": "https://github.com/tanbro/lm-webdemo-site#readme",
   "dependencies": {
-    "bootstrap": "~4",
-    "holderjs": "^2.9.6",
-    "jquery": "^3.4.1",
-    "popper.js": "^1.16.0"
-  },
-  "devDependencies": {
-    "http-server": "^0.12.0",
-    "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10"
-  },
-  "scripts": {
-    "build": "webpack",
-    "http-server": "npx http-server",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "liu xue yan",
-  "license": "ISC"
+    "uuid": "^3.3.3"
+  }
 }
