@@ -20,14 +20,19 @@ class SpeechBubble extends React.Component {
 
     render() {
         const props = this.props
-        const avatarUrl = props.data.isReverse ? `//www.gravatar.com/avatar/?d=mp` : `//www.gravatar.com/avatar/${props.hashKey}?d=identicon`
-        const userName = props.data.isReverse ? null : `A.I. ${props.chatId}`
-        const domTime = props.data.time ? (
-            <small className='text-muted'>{props.data.time.toLocaleString(undefined, dateToStringLocaleOptions)}</small>
-        ) : null
+        const convInfo = props.info
+        const convMsg = props.message
+
+        const isMyself = convMsg.direction === 'incoming'
+
+        const avatarUrl = isMyself ? `//www.gravatar.com/avatar/?d=mp` : `//www.gravatar.com/avatar/${convInfo.pid}?d=identicon`
+        const userName = isMyself ? null : `A.I.${convInfo.pid}`
+        const timeStr = convMsg.time ?
+            (new Date(Date.parse(convMsg.time))).toLocaleString(undefined, dateToStringLocaleOptions)
+            : null
 
         return (
-            <div ref={this.innerRef} className={`d-flex ${props.data.isReverse ? "flex-row-reverse" : "flex-row"} flex-nowrap pt-3`}>
+            <div ref={this.innerRef} className={`d-flex ${isMyself ? "flex-row-reverse" : "flex-row"} flex-nowrap pt-3`}>
                 <div className='p-1'>
                     <div className='d-flex flex-column'>
                         <div>
@@ -40,16 +45,18 @@ class SpeechBubble extends React.Component {
                 </div>
                 <div className='p-1'>
                     <div className='d-flex flex-column'>
-                        <div className={`d-flex align-self-${props.data.isReverse ? 'end' : 'start'}`}>
-                            <div className={`popover bs-popover-${props.data.isReverse ? 'left' : 'right'} position-relative shadow`}>
+                        <div className={`d-flex align-self-${isMyself ? 'end' : 'start'}`}>
+                            <div className={`popover bs-popover-${isMyself ? 'left' : 'right'} position-relative shadow`}>
                                 <div className='arrow'></div>
                                 <div className='popover-body'>
-                                    {props.data.text}
+                                    {convMsg.message}
                                 </div>
                             </div>
                         </div>
-                        <div className={`d-flex justify-content-${props.data.isReverse ? 'end' : 'start'} px-2`}>
-                            {domTime}
+                        <div className={`d-flex justify-content-${isMyself ? 'end' : 'start'} px-2`}>
+                            <small className='text-muted'>
+                                {timeStr}
+                            </small>
                         </div>
                     </div>
                 </div>

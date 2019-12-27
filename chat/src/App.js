@@ -2,8 +2,6 @@ import React from 'react'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-import md5 from 'md5'
-
 import TopBar from './components/TopBar'
 import BottomBar from './components/BottomBar'
 import SpeechBubbleList from './components/SpeechBubbleList'
@@ -31,143 +29,22 @@ class App extends React.Component {
       title: '',
       text: '',
     },
-    chatProc: {
-      hashKey: null,
-      program: null,
-      cwd: null,
-      args: null,
-      key: null,
-      personality: '',
+    conv: {
+      info: {},
       history: []
     },
   }
 
   componentDidMount() {
-    this.getChat()
-  }
-
-  resetChat() {
-    console.info('resetChat')
-
-    this.openLoadingModal('重置会话 ...')
+    // 首先，检查是否据已经有一个会话了，如果有，打开！
+    this.openLoadingModal('检查会话信息 ...')
 
     fetch(apiBaseUrl, {
-      method: 'POST',
       cache: 'no-cache',
       mode: 'cors',
     })
       .then(response => {
         if (!response.ok) {
-          // TODO: 错误处理
-          this.closeLoadingModal()
-          throw new Error(response.statusText)
-        }
-        return response.body
-      })
-      .then(
-        body => {
-          return (stream => {
-            // stream read
-            const reader = stream.getReader()
-            const utf8decoder = new TextDecoder()
-            const keys = ['id', 'personality', 'program', 'cwd', 'args']
-            const attrs = {}
-            let buf = ''
-
-            const pump = () => {
-              return reader.read().then(({ value, done }) => {
-                value = utf8decoder.decode(value)
-                console.debug('response-stream:', done, value)
-                buf += value  // 缓冲下来，然后按照行进行处理
-                while (true) {
-                  let pos = buf.indexOf('\n')
-                  if (pos < 0) {
-                    break
-                  }
-                  let line = buf.slice(0, pos).trim()
-                  buf = buf.slice(pos + 1)
-                  if (!line) {
-                    break
-                  }
-                  // 刷新 loading modal
-                  this.setState(state => ({
-                    loadingModal: Object.assign(
-                      state.loadingModal, {
-                      text: line
-                    })
-                  }))
-                  // 继续解析
-                  let parts = line.split(':')
-                  if (parts.length < 2) {
-                    break
-                  }
-                  let k = parts[0].trim()
-                  let v = ''
-                  if (keys.indexOf(k) >= 0) {
-                    v = parts.slice(1).join(':')
-                    v = v.trim()
-                    if (!v) {
-                      break
-                    }
-                    attrs[k] = v
-                  }
-                }
-
-                // response 结束！
-                if (done) {
-                  attrs.hashKey = md5(attrs['args'] + attrs['cwd'] + attrs['program'])
-                  // do render
-                  this.setState(state => {
-                    // 更新对话历史列表
-                    // 将 personality 作为一个假的对话
-                    state.chatProc.history = [{
-                      text: attrs.personality,
-                      time: new Date()
-                    }]
-                    state.chatProc = Object.assign(state.chatProc, attrs)
-                    // 关闭 loading modal
-                    state.LoadingModal = Object.assign(
-                      state.loadingModal, {
-                      isOpen: false,
-                      text: ''
-                    })
-                    return {
-                      chatProc: state.chatProc,
-                      loadingModal: state.LoadingModal
-                    }
-                  })
-                  return true
-                }
-
-                ///
-                return pump()
-              })
-            }
-
-            return pump()
-
-          })(body)
-        },
-        err => {
-          this.closeLoadingModal()
-          throw new Error(err)
-        }
-      )
-  }
-
-  reattachChat(chat) {
-    console.info('reattachChat:', chat)
-
-    this.openLoadingModal('恢复会话数据 ...')
-
-    let url = `${apiBaseUrl}/${chat.id}`
-    fetch(url, {
-      cache: 'no-cache',
-      mode: 'cors',
-    })
-      .then(response => {
-        if (!response.ok) {
-          //TODO: 错误处理
           this.closeLoadingModal()
           throw new Error(response.statusText)
         } else {
@@ -176,27 +53,17 @@ class App extends React.Component {
       })
       .then(
         result => {
-          /// 将历史对话数据放上去
-          let history = [{
-            text: result.personality
-          }]
-          result.history.forEach(m => {
-            history.push({
-              text: m.msg,
-              time: new Date(Date.parse(m.time)),
-              isReverse: m.dir === 'input'
-            })
-          })
-          result.history = history
-          result.hashKey = md5(result['args'] + result['cwd'] + result['program'])
-          this.setState(state => ({
-            chatProc: result,
-            loadingModal: Object.assign(
-              state.loadingModal, {
-              isOpen: false,
-              text: ''
-            })
-          }))
+          console.debug('get conversations list response ok:', result)
+          const convInfoList = result
+          if (convInfoList.length) {
+            // 找到会话了，用第一个
+            const convInfo = convInfoList[0]
+            this.loadConv(convInfo)
+
+            // this.reattachChat(chat)
+          } else {
+            this.createConv()
+          }
         },
         err => {
           //TODO: 错误处理
@@ -206,14 +73,201 @@ class App extends React.Component {
       )
   }
 
-  clearChat() {
-    console.info('clearChat:')
+  loadConv(convInfo) {
+    this.openLoadingModal('加载会话信息 ...')
+
+    // 循环等待初始化完毕！
+    this.waitConvUntilStarted(convInfo.uid)
+      .then(
+        (result) => {
+          this.closeLoadingModal()
+          // 显示历史
+          this.loadConvHistory(result)
+        },
+        error => {
+          throw new Error(error)
+        }
+      )
+  }
+
+  reloadConv() {
+    return this.loadConv(this.state.conv.info)
+  }
+
+  createConv() {
+    this.openLoadingModal('新建会话 ...')
+
+    fetch(apiBaseUrl, {
+      method: 'POST',
+      cache: 'no-cache',
+      mode: 'cors',
+    })
+      .then(response => {
+        if (!response.ok) {
+          this.closeLoadingModal()
+          throw new Error(response.statusText)
+        } else {
+          return response.json()
+        }
+      })
+      .then(
+        result => {
+          console.debug('create conversation response ok: ', result)
+          const convInfo = result
+          this.setState((state) => ({
+            conv: Object.assign(state.conv, {
+              info: convInfo
+            })
+          }))
+          // 循环等待初始化完毕！
+          this.waitConvUntilStarted(convInfo.uid)
+            .then(
+              result => {
+                this.closeLoadingModal()
+                // 显示历史
+                this.loadConvHistory(result)
+              },
+              error => {
+                throw new Error(error)
+              }
+            )
+        },
+        error => {
+          //TODO: 错误处理
+          this.closeLoadingModal()
+          throw new Error(error)
+        }
+      )
+  }
+
+
+  reCreateConv() {
+    this.openLoadingModal('删除会话 ...')
+
+    const url = `${apiBaseUrl}/${this.state.conv.info.uid}`
+
+    fetch(url, {
+      method: 'DELETE',
+      cache: 'no-cache',
+      mode: 'cors',
+    })
+      .then(response => {
+        if (!response.ok) {
+          this.closeLoadingModal()
+          throw new Error(response.statusText)
+        } else {
+          return response.arrayBuffer()
+        }
+      })
+      .then(
+        () => {
+          console.debug('delete conversation response ok')
+          this.setState((state) => ({
+            conv: {
+              info: {},
+              history: [],
+            }
+          }))
+          this.closeLoadingModal()
+          this.createConv()
+        },
+        error => {
+          //TODO: 错误处理
+          this.closeLoadingModal()
+          throw new Error(error)
+        }
+      )
+  }
+
+
+  waitConvUntilStarted(convUid, interval = 1500) {
+    return new Promise((resolve, reject) => {
+      // 检查一次，是否启动
+      const doCheck = () => {
+        const url = `${apiBaseUrl}/${convUid}`
+        fetch(url, {
+          cache: 'no-cache',
+          mode: 'cors',
+        })
+          .then(response => {
+            if (!response.ok) {
+              reject(new Error(response.statusText))
+            } else {
+              return response.json()
+            }
+          })
+          .then(
+            result => {
+              const convInfo = result
+              this.setState(state => ({
+                conv: Object.assign(state.conv, {
+                  info: convInfo
+                })
+              }))
+              if (convInfo.state === 'started') {
+                console.info('started:', convInfo)
+                resolve(convInfo)
+              } else if (convInfo.state === 'pending') {
+                setTimeout(doCheck, interval, convUid, interval)
+              } else {
+                console.error('Wrong conversation state:', convInfo)
+                reject(convInfo.state)
+              }
+            },
+            error => {
+              reject(new Error(error))
+            }
+          )
+      }
+      doCheck()
+    })
+  }
+
+
+  loadConvHistory(convInfo) {
+    const url = `${apiBaseUrl}/${convInfo.uid}/history`
+    fetch(url, {
+      cache: 'no-cache',
+      mode: 'cors',
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText)
+        } else {
+          return response.json()
+        }
+      })
+      .then(
+        result => {
+          const convSpeechList = result
+          // 伪造第一句问候语
+          convSpeechList.unshift({
+            type: 'text',
+            message: convInfo.personality,
+            direction: 'outgoing',
+          })
+          this.setState(state => ({
+            conv: Object.assign(state.conv, {
+              history: convSpeechList
+            })
+          }))
+        },
+        error => {
+          throw new Error(error)
+        }
+      )
+  }
+
+
+  clearCurrentConvHistory() {
+    console.warn('clearConvHistory')
 
     this.openLoadingModal('清空会话历史')
 
-    let url = `${apiBaseUrl}/${this.state.chatProc.id}/clear`
+    const convInfo = this.state.conv.info
+    const url = `${apiBaseUrl}/${convInfo.uid}/history`
     fetch(url, {
-      method: 'POST',
+      method: 'DELETE',
       cache: 'no-cache',
       mode: 'cors',
     })
@@ -227,15 +281,9 @@ class App extends React.Component {
         }
       })
       .then(
-        _ => {
-          /// 将历史对话数据清空，但是留下一个假的 personality 作为开头句子
+        () => {
+          this.loadConvHistory(convInfo)
           this.setState(state => ({
-            chatProc: Object.assign(
-              state.chatProc, {
-              history: [{
-                text: state.chatProc.personality
-              }]
-            }),
             loadingModal: Object.assign(
               state.loadingModal, {
               isOpen: false,
@@ -273,65 +321,6 @@ class App extends React.Component {
     }))
   }
 
-  init() {
-    this.openLoadingModal('读取配置信息 ...')
-    fetch('config.json', {
-      cache: 'no-cache',
-      mode: 'cors',
-    })
-      .then(response => {
-        if (!response.ok) {
-          this.closeLoadingModal()
-          throw new Error(response.statusText)
-        } else {
-          return response.json()
-        }
-      })
-      .then(
-        result => {
-          Object.assign(this.config, result)
-          this.getChat()
-        },
-        err => {
-          //TODO: 错误处理
-          this.closeLoadingModal()
-          throw new Error(err)
-        }
-      )
-  }
-
-  getChat() {
-    this.openLoadingModal('加载会话信息 ...')
-
-    fetch(apiBaseUrl, {
-      cache: 'no-cache',
-      mode: 'cors',
-    })
-      .then(response => {
-        if (!response.ok) {
-          this.closeLoadingModal()
-          throw new Error(response.statusText)
-        } else {
-          return response.json()
-        }
-      })
-      .then(
-        result => {
-          let chats = result
-          if (chats.length) {
-            let chat = chats[0]
-            this.reattachChat(chat)
-          } else {
-            this.resetChat()
-          }
-        },
-        err => {
-          //TODO: 错误处理
-          this.closeLoadingModal()
-          throw new Error(err)
-        }
-      )
-  }
 
   handleInputMessageSubmit(value) {
     value = value.trim()
@@ -342,55 +331,56 @@ class App extends React.Component {
         return
       }
 
+      const inMsg = {
+        message: value,
+        time: new Date(),
+        direction: 'incoming',
+      }
+
       this.setState(state => {
         // 增加对话历史数据
-        state.chatProc.history.push({
-          text: value,
-          time: new Date(),
-          isReverse: true,
-        })
+        state.conv.history.push(inMsg)
         return {
-          chatProc: state.chatProc
+          conv: Object.assign(state.conv, {
+            history: state.conv.history
+          })
         }
       })
 
       // 请求服务器的答复
-      fetch(`${apiBaseUrl}/${this.state.chatProc.id}/input`, {
+      fetch(`${apiBaseUrl}/${this.state.conv.info.uid}`, {
         method: 'POST',
         cache: 'no-cache',
         mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          msg: value
-        })
+        body: JSON.stringify(inMsg)
       })
         .then(response => {
           if (!response.ok) {
             /// TODO: response 错误 status 处理
-            reject()
-            throw new Error(response.statusText)
+            reject(new Error(response.statusText))
           }
           return response.json()
         })
         .then(
           result => {
+            const outMsg = result
             this.setState(state => {
               // 增加对话历史数据
-              this.state.chatProc.history.push({
-                text: result.msg,
-                time: new Date(),
-              })
+              state.conv.history.push(outMsg)
               return {
-                chatProc: state.chatProc
+                conv: Object.assign(state.conv, {
+                  history: state.conv.history
+                })
               }
             })
-            resolve()
+            resolve(result)
           },
-          err => {
+          error => {
             /// TODO: input 错误处理
-            reject(err)
+            reject(error)
           }
         )
     })
@@ -399,11 +389,11 @@ class App extends React.Component {
 
   handleOptionMenuClick(data) {
     if (data.option === 'reload') {
-      this.getChat()
+      this.reloadConv()
     } else if (data.option === 'reset') {
-      this.resetChat()
+      this.reCreateConv()
     } else if (data.option === 'clear') {
-      this.clearChat()
+      this.clearCurrentConvHistory()
     } else {
       throw new Error(`Unknown OptionMenu: ${data.option}`)
     }
@@ -416,7 +406,7 @@ class App extends React.Component {
       <div className='App'>
         <LoadingModal isOpen={state.loadingModal.isOpen} title={state.loadingModal.title} text={state.loadingModal.text}></LoadingModal>
         <TopBar logo={logo} title='话媒心理' onMenuItemClick={this.handleOptionMenuClick}></TopBar>
-        <SpeechBubbleList data={state.chatProc}></SpeechBubbleList>
+        <SpeechBubbleList conv={state.conv}></SpeechBubbleList>
         <BottomBar onSubmit={this.handleInputMessageSubmit}></BottomBar>
       </div>
     )

@@ -8,14 +8,14 @@ class SpeechBubbleList extends React.Component {
 
     render() {
         const props = this.props
+        const conv = props.conv
 
-        const domChildren = props.data.history.map(
+        const domChildren = conv.history.map(
             (value, index) => (
                 <SpeechBubble
-                    key={`${props.data.id}.${index}`}
-                    data={value}
-                    chatId={props.data.id}
-                    hashKey={props.data.hashKey}
+                    key={`${conv.info.uid}.${index}`}
+                    info={conv.info}
+                    message={value}
                 >
                 </SpeechBubble>
             )
