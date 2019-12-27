@@ -180,7 +180,7 @@ class App extends React.Component {
   }
 
 
-  waitConvUntilStarted(convUid, interval = 1500) {
+  waitConvUntilStarted(convUid, interval = 5000) {
     return new Promise((resolve, reject) => {
       // 检查一次，是否启动
       const doCheck = () => {
