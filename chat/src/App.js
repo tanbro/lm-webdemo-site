@@ -180,7 +180,80 @@ class App extends React.Component {
   }
 
 
+  traceConvOutput(convUid) {
+
+    const doTrace = () => {
+      const url = `${apiBaseUrl}/${convUid}/trace`
+      fetch(url, {
+        cache: 'no-cache',
+        mode: 'cors',
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(response.statusText)
+          }
+          return response.body
+        })
+        .then(
+          body => {
+            if (!this.state.conv.info.state === 'pending') {
+              return
+            }
+            return (stream => {
+              // stream read
+              const reader = stream.getReader()
+              const utf8decoder = new TextDecoder()
+              let buf = ''
+
+              const pump = () => {
+                return reader.read().then(({ value, done }) => {
+                  value = utf8decoder.decode(value)
+                  buf += value  // 缓冲下来，然后按照行进行处理
+                  while (true) {
+                    let pos = buf.indexOf('\n')
+                    if (pos < 0) {
+                      break
+                    }
+                    let line = buf.slice(0, pos).trim()
+                    buf = buf.slice(pos + 1)
+                    if (!line) {
+                      break
+                    }
+                    console.log('trace 行文本: ', line)
+                    this.setState(state => ({
+                      loadingModal: Object.assign(
+                        state.loadingModal, {
+                        text: line
+                      })
+                    }))
+                  }
+                  // response 结束！
+                  if (done) {
+                    doTrace()
+                    return
+                  }
+                  ///
+                  return pump()
+                })
+              }
+
+              return pump()
+            })(body)
+          },
+          error => {
+            // throw new Error(error)
+            console.warn('error on traceConvOutput:', error)
+          }
+        )
+    }
+
+    doTrace()
+
+  }
+
+
   waitConvUntilStarted(convUid, interval = 5000) {
+    this.traceConvOutput(convUid)
     return new Promise((resolve, reject) => {
       // 检查一次，是否启动
       const doCheck = () => {

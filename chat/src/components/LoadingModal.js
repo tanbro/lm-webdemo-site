@@ -24,7 +24,7 @@ class LoadingModal extends React.Component {
                     <ModalBody>
                         <div className='container'>
                             <div className='row'>
-                                <div className='col text-sm text-muted text-nowrap text-truncate text-monospace'>
+                                <div className='col text-sm text-muted text-monospace'>
                                     <code><small>{props.text}</small></code>
                                 </div>
                             </div>
