@@ -182,21 +182,32 @@ class App extends React.Component {
 
   traceConvOutput(convUid) {
 
-    const doTrace = () => {
+    const perform = () => {
       const url = `${apiBaseUrl}/${convUid}/trace`
       fetch(url, {
         cache: 'no-cache',
         mode: 'cors',
+        headers: {
+          'Range': 'lines=0-'
+        }
       })
         .then(response => {
           if (!response.ok) {
             throw new Error(response.statusText)
           }
-          return response.body
+          if ([204, 205].indexOf(response.status) >= 0) {
+            // 不要继续了！
+            return
+          } else if (response.status === 206) {
+            // 要继续！
+            return response.body
+          } else {
+            throw new Error('Un-support status:', response.status, response.statusText)
+          }
         })
         .then(
           body => {
-            if (!this.state.conv.info.state === 'pending') {
+            if (!body) {
               return
             }
             return (stream => {
@@ -219,7 +230,6 @@ class App extends React.Component {
                     if (!line) {
                       break
                     }
-                    console.log('trace 行文本: ', line)
                     this.setState(state => ({
                       loadingModal: Object.assign(
                         state.loadingModal, {
@@ -229,8 +239,7 @@ class App extends React.Component {
                   }
                   // response 结束！
                   if (done) {
-                    doTrace()
-                    return
+                    return perform()
                   }
                   ///
                   return pump()
@@ -247,7 +256,7 @@ class App extends React.Component {
         )
     }
 
-    doTrace()
+    perform()
 
   }
 
