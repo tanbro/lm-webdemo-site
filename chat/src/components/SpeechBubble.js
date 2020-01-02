@@ -20,13 +20,14 @@ class SpeechBubble extends React.Component {
 
     render() {
         const props = this.props
-        const convInfo = props.info
-        const convMsg = props.message
+        const info = props.info
+        const message = props.message
 
-        const isMyself = convMsg.direction === 'incoming'
+        const isMyself = message.direction === 'incoming'
 
-        const avatarUrl = isMyself ? `//www.gravatar.com/avatar/?d=mp` : `//www.gravatar.com/avatar/${convInfo.pid}?d=identicon`
-        const userName = isMyself ? null : `A.I.${convInfo.pid}`
+        const avatarUrl = isMyself ? `//www.gravatar.com/avatar/?d=mp` : `//www.gravatar.com/avatar/${info.pid}?d=identicon`
+        const userName = isMyself ? null : `A.I.${info.pid}`
+        const timeString = message.time ? (new Date(message.time)).toLocaleString(undefined, dateToStringLocaleOptions) : ''
 
         return (
             <div ref={this.innerRef} className={`d-flex ${isMyself ? "flex-row-reverse" : "flex-row"} flex-nowrap pt-3`}>
@@ -46,17 +47,13 @@ class SpeechBubble extends React.Component {
                             <div className={`popover bs-popover-${isMyself ? 'left' : 'right'} position-relative shadow`}>
                                 <div className='arrow'></div>
                                 <div className='popover-body'>
-                                    {convMsg.message}
+                                    {message.message}
                                 </div>
                             </div>
                         </div>
                         <div className={`d-flex justify-content-${isMyself ? 'end' : 'start'} px-2`}>
                             <small className='text-muted'>
-                                {
-                                    convMsg.time
-                                        ? (new Date(convMsg.time)).toLocaleString(undefined, dateToStringLocaleOptions)
-                                        : ''
-                                }
+                                {timeString}
                             </small>
                         </div>
                     </div>
