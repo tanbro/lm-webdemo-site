@@ -18,7 +18,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "ossutil64 cp ./build oss://hm-files/lmdemo/qa --recursive --update",
+    "remove-deployment": "ossutil64 rm oss://hm-files/lmdemo/qa --recursive --force",
+    "build-deploy": "npm run build && npm run deploy"
   },
   "eslintConfig": {
     "extends": "react-app"
