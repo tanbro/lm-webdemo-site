@@ -27,9 +27,6 @@ class SpeechBubble extends React.Component {
 
         const avatarUrl = isMyself ? `//www.gravatar.com/avatar/?d=mp` : `//www.gravatar.com/avatar/${convInfo.pid}?d=identicon`
         const userName = isMyself ? null : `A.I.${convInfo.pid}`
-        const timeStr = convMsg.time ?
-            (new Date(convMsg.time)).toLocaleString(undefined, dateToStringLocaleOptions)
-            : null
 
         return (
             <div ref={this.innerRef} className={`d-flex ${isMyself ? "flex-row-reverse" : "flex-row"} flex-nowrap pt-3`}>
@@ -55,7 +52,11 @@ class SpeechBubble extends React.Component {
                         </div>
                         <div className={`d-flex justify-content-${isMyself ? 'end' : 'start'} px-2`}>
                             <small className='text-muted'>
-                                {timeStr}
+                                {
+                                    convMsg.time
+                                        ? (new Date(convMsg.time)).toLocaleString(undefined, dateToStringLocaleOptions)
+                                        : ''
+                                }
                             </small>
                         </div>
                     </div>
