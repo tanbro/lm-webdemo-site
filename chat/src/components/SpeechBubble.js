@@ -28,7 +28,7 @@ class SpeechBubble extends React.Component {
         const avatarUrl = isMyself ? `//www.gravatar.com/avatar/?d=mp` : `//www.gravatar.com/avatar/${convInfo.pid}?d=identicon`
         const userName = isMyself ? null : `A.I.${convInfo.pid}`
         const timeStr = convMsg.time ?
-            (new Date(Date.parse(convMsg.time))).toLocaleString(undefined, dateToStringLocaleOptions)
+            (new Date(convMsg.time)).toLocaleString(undefined, dateToStringLocaleOptions)
             : null
 
         return (
