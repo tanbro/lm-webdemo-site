@@ -2,12 +2,13 @@ import React from 'react';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import './SpeechBubble.css';
+import TextMessage from './TextMessage'
+import SuggestCounselorMessage from './SuggestCounselorMessage'
+
+import './MessageBubble.css';
 
 
-const dateToStringLocaleOptions = { year: '2-digit', month: '2-digit', day: '2-digit', hour: '2-digit', hour12: false, minute: '2-digit' }
-
-class SpeechBubble extends React.Component {
+class MessageBubble extends React.Component {
     constructor(props) {
         super(props)
         this.innerRef = React.createRef()
@@ -27,7 +28,41 @@ class SpeechBubble extends React.Component {
 
         const avatarUrl = isMyself ? `//www.gravatar.com/avatar/?d=mp` : `//www.gravatar.com/avatar/${info.pid}?d=identicon`
         const userName = isMyself ? null : `A.I.${info.pid}`
-        const timeString = message.time ? (new Date(message.time)).toLocaleString(undefined, dateToStringLocaleOptions) : ''
+
+        const dtNow = new Date()
+        let timeString = null
+        if (message.time) {
+            const dtThen = new Date(message.time)
+            if (dtThen.year === dtNow.year) {
+                timeString = dtThen.toLocaleString(undefined,{
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                })
+            } else {
+                timeString = dtThen.toLocaleString(undefined,{
+                    year: '2-digit',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                })
+            }
+        }
+
+        let domMessage = null
+        if (message.type === 'text') {
+            domMessage = (
+                <TextMessage message={message.message}></TextMessage>
+            )
+        } else if (message.type === 'suggest_counselor') {
+            domMessage = (
+                <SuggestCounselorMessage message={message.message}></SuggestCounselorMessage>
+            )
+        } else {
+            throw new Error(`Un-support message type ${message.type}`)
+        }
 
         return (
             <div ref={this.innerRef} className={`d-flex ${isMyself ? "flex-row-reverse" : "flex-row"} flex-nowrap pt-3`}>
@@ -47,7 +82,7 @@ class SpeechBubble extends React.Component {
                             <div className={`popover bs-popover-${isMyself ? 'left' : 'right'} position-relative shadow`}>
                                 <div className='arrow'></div>
                                 <div className='popover-body'>
-                                    {message.message}
+                                    {domMessage}
                                 </div>
                             </div>
                         </div>
@@ -63,4 +98,4 @@ class SpeechBubble extends React.Component {
     }
 }
 
-export default SpeechBubble;
+export default MessageBubble;

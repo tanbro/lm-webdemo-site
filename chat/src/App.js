@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 
 import TopBar from './components/TopBar'
 import BottomBar from './components/BottomBar'
-import SpeechBubbleList from './components/SpeechBubbleList'
+import MessageBubbleList from './components/MessageBubbleList'
 import LoadingModal from './components/LoadingModal'
 
 import './App.css'
@@ -413,7 +413,8 @@ class App extends React.Component {
         return
       }
 
-      const inMsg = {
+      const sndMsg = {
+        type: 'text',
         message: value,
         time: new Date(),
         direction: 'incoming',
@@ -421,7 +422,7 @@ class App extends React.Component {
 
       this.setState(state => {
         // 增加对话历史数据
-        state.conv.history.push(inMsg)
+        state.conv.history.push(sndMsg)
         return {
           conv: Object.assign(state.conv, {
             history: state.conv.history
@@ -437,28 +438,27 @@ class App extends React.Component {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(inMsg)
+        body: JSON.stringify(sndMsg)
       })
         .then(response => {
           if (!response.ok) {
-            /// TODO: response 错误 status 处理
             reject(new Error(response.statusText))
           }
           return response.json()
         })
         .then(
           result => {
-            const outMsg = result
+            const recvMsg = result
             this.setState(state => {
               // 增加对话历史数据
-              state.conv.history.push(outMsg)
+              state.conv.history.push(recvMsg)
               return {
                 conv: Object.assign(state.conv, {
                   history: state.conv.history
                 })
               }
             })
-            resolve(result)
+            resolve(recvMsg)
           },
           error => {
             /// TODO: input 错误处理
@@ -488,7 +488,7 @@ class App extends React.Component {
       <div className='App'>
         <LoadingModal isOpen={state.loadingModal.isOpen} title={state.loadingModal.title} text={state.loadingModal.text}></LoadingModal>
         <TopBar logo={logo} title='话媒心理' onMenuItemClick={this.handleOptionMenuClick}></TopBar>
-        <SpeechBubbleList conv={state.conv}></SpeechBubbleList>
+        <MessageBubbleList conv={state.conv}></MessageBubbleList>
         <BottomBar onSubmit={this.handleInputMessageSubmit}></BottomBar>
       </div>
     )

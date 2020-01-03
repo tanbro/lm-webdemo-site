@@ -2,9 +2,9 @@ import React from 'react';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import SpeechBubble from './SpeechBubble'
+import MessageBubble from './MessageBubble'
 
-class SpeechBubbleList extends React.Component {
+class MessageBubbleList extends React.Component {
 
     render() {
         const props = this.props
@@ -12,12 +12,12 @@ class SpeechBubbleList extends React.Component {
 
         const domChildren = conv.history.map(
             (value, index) => (
-                <SpeechBubble
+                <MessageBubble
                     key={`${conv.info.uid}.${index}`}
                     info={conv.info}
                     message={value}
                 >
-                </SpeechBubble>
+                </MessageBubble>
             )
         )
 
@@ -31,4 +31,4 @@ class SpeechBubbleList extends React.Component {
     };
 }
 
-export default SpeechBubbleList;
+export default MessageBubbleList;
