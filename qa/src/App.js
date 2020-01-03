@@ -23,7 +23,7 @@ class ExampleSelectModal extends React.Component {
   }
 
   componentDidMount() {
-    const url = `${process.env.PUBLIC_URL}/data/input-examples.json`
+    const url = `./data/input-examples.json`
     fetch(url)
       .then(response => response.json())
       .then(result => {
@@ -133,7 +133,7 @@ class App extends React.Component {
   handleFormSubmit(event) {
     event.preventDefault()
 
-    const url = `${this.apiBaseUrl}/${this.state.backend.uid}`
+    const url = `${this.apiBaseUrl}${this.state.backend.uid}`
     const reqBody = {
       title: this.state.title.trim(),
       text: this.state.text.trim(),
@@ -205,7 +205,7 @@ class App extends React.Component {
         }))
       }
 
-      this.setState(state=>({
+      this.setState(state => ({
         title: '',
         text: '',
         outputText: '',
@@ -253,11 +253,11 @@ class App extends React.Component {
         title: example.title,
         text: example.text,
         showExample: false
-      })  
+      })
     } else {
       this.setState({
         showExample: false
-      })  
+      })
     }
   }
 
@@ -412,7 +412,7 @@ class App extends React.Component {
 
   deleteBackend(uid) {
     return new Promise((resolve, reject) => {
-      const url = `${this.apiBaseUrl}/${uid}`
+      const url = `${this.apiBaseUrl}${uid}`
 
       fetch(url, {
         cache: 'no-cache',
@@ -443,7 +443,7 @@ class App extends React.Component {
     return new Promise((resolve, reject) => {
 
       const perform = () => {
-        const url = `${this.apiBaseUrl}/${uid}/trace`
+        const url = `${this.apiBaseUrl}${uid}/trace`
         fetch(url, {
           cache: 'no-cache',
           mode: 'cors',
