@@ -69,7 +69,7 @@ class MessageBubble extends React.Component {
                 <div className='p-1'>
                     <div className='d-flex flex-column'>
                         <div>
-                            <img src={avatarUrl} className='rounded' alt='' width='48' height='48'></img>
+                            <img src={avatarUrl} className='rounded shadow' alt='' width='48' height='48'></img>
                         </div>
                         <div>
                             <small>{userName}</small>

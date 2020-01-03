@@ -2,15 +2,15 @@ import React from 'react';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import SuggestCard from './SuggestCard'
+import CounselorCard from './CounselorCard'
 
 class SuggestCounselorMessage extends React.Component {
     render() {
         const message = this.props.message
         const domItems = message.counselors.map(
             (value, index) => (
-                <div key={index} className='list-group-item'>
-                    <SuggestCard data={value}></SuggestCard>
+                <div key={index} className='list-group-item px-0'>
+                    <CounselorCard data={value}></CounselorCard>
                 </div>
             )
         )

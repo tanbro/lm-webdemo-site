@@ -2,25 +2,41 @@ import React from 'react';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-class SuggestCard extends React.Component {
+class CounselorCard extends React.Component {
+    constructor(props) {
+        super(props)
+        this.handleSubscribeClick = this.handleSubscribeClick.bind(this)
+    }
+
+    handleSubscribeClick(event) {
+        const counselorName = event.target.dataset.counselorName
+        alert(`TODO: 显示预约 咨询师【${counselorName}】 的界面`)
+    }
+
     render() {
         const data = this.props.data
         return (
             <div className="card shadow">
                 <div className="row no-gutters">
                     <div className="col-4">
-                        <img src={data.avatar} class="card-img" alt='...'></img>
+                        <img src={data.avatar} className="card-img" alt=''></img>
                     </div>
                     <div className="col">
-                        <div className="row no-gutters align-items-center justify-content-around text-nowrap text-truncate ">
+                        <div className="row align-items-center">
                             <div className="col">
                                 <div className="card-body p-1">
-                                    <h6 className="card-title">{data.name}</h6>
+                                    <h5 className="card-title text-nowrap text-truncate">{data.name}</h5>
                                 </div>
                             </div>
                             <div className="col">
                                 <div className="card-body p-0">
-                                    <button className='btn btn-sm btn-success'>预约</button>
+                                    <button
+                                        className='btn btn-sm btn-outline-success text-nowrap'
+                                        data-counselor-name={data.name}
+                                        onClick={this.handleSubscribeClick}
+                                    >
+                                        预约
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -39,4 +55,4 @@ class SuggestCard extends React.Component {
     }
 }
 
-export default SuggestCard
+export default CounselorCard

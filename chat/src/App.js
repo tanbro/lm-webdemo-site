@@ -448,16 +448,21 @@ class App extends React.Component {
         })
         .then(
           result => {
-            const recvMsg = result
-            this.setState(state => {
-              // 增加对话历史数据
-              state.conv.history.push(recvMsg)
-              return {
-                conv: Object.assign(state.conv, {
-                  history: state.conv.history
-                })
-              }
-            })
+            let recvMsg = result
+            if (!Array.isArray(recvMsg)){
+              recvMsg=[recvMsg]
+            }
+            for (const msg of recvMsg) {
+              this.setState(state => {
+                // 增加对话历史数据
+                state.conv.history.push(msg)
+                return {
+                  conv: Object.assign(state.conv, {
+                    history: state.conv.history
+                  })
+                }
+              })
+            }
             resolve(recvMsg)
           },
           error => {
