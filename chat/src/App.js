@@ -144,7 +144,7 @@ class App extends React.Component {
   reCreateConv() {
     this.openLoadingModal('删除会话 ...')
 
-    const url = `${apiBaseUrl}/${this.state.conv.info.uid}`
+    const url = `${apiBaseUrl}${this.state.conv.info.uid}`
 
     fetch(url, {
       method: 'DELETE',
@@ -183,7 +183,7 @@ class App extends React.Component {
   traceConvOutput(convUid) {
 
     const perform = () => {
-      const url = `${apiBaseUrl}/${convUid}/trace`
+      const url = `${apiBaseUrl}${convUid}/trace`
       fetch(url, {
         cache: 'no-cache',
         mode: 'cors',
@@ -266,7 +266,7 @@ class App extends React.Component {
     return new Promise((resolve, reject) => {
       // 检查一次，是否启动
       const doCheck = () => {
-        const url = `${apiBaseUrl}/${convUid}`
+        const url = `${apiBaseUrl}${convUid}`
         fetch(url, {
           cache: 'no-cache',
           mode: 'cors',
@@ -307,7 +307,7 @@ class App extends React.Component {
 
 
   loadConvHistory(convInfo) {
-    const url = `${apiBaseUrl}/${convInfo.uid}/history`
+    const url = `${apiBaseUrl}${convInfo.uid}/history`
     fetch(url, {
       cache: 'no-cache',
       mode: 'cors',
@@ -347,7 +347,7 @@ class App extends React.Component {
     this.openLoadingModal('清空会话历史')
 
     const convInfo = this.state.conv.info
-    const url = `${apiBaseUrl}/${convInfo.uid}/history`
+    const url = `${apiBaseUrl}${convInfo.uid}/history`
     fetch(url, {
       method: 'DELETE',
       cache: 'no-cache',
@@ -431,7 +431,7 @@ class App extends React.Component {
       })
 
       // 请求服务器的答复
-      fetch(`${apiBaseUrl}/${this.state.conv.info.uid}`, {
+      fetch(`${apiBaseUrl}${this.state.conv.info.uid}`, {
         method: 'POST',
         cache: 'no-cache',
         mode: 'cors',
