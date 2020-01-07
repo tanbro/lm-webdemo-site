@@ -3,7 +3,8 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import TextMessage from './TextMessage'
-import SuggestCounselorMessage from './SuggestCounselorMessage'
+import SuggestMessage from './SuggestMessage'
+import PromptMessage from './PromptMessage'
 
 import './MessageBubble.css';
 
@@ -12,11 +13,19 @@ class MessageBubble extends React.Component {
     constructor(props) {
         super(props)
         this.innerRef = React.createRef()
+        this.handleSubmit = this.handleSubmit.bind(this)
     }
 
     componentDidMount() {
         const element = this.innerRef.current
         element.scrollIntoView()
+    }
+
+    handleSubmit(event) {
+        const handler = this.props.onSubmit
+        if (handler) {
+            return handler(event)
+        }
     }
 
     render() {
@@ -34,14 +43,14 @@ class MessageBubble extends React.Component {
         if (message.time) {
             const dtThen = new Date(message.time)
             if (dtThen.year === dtNow.year) {
-                timeString = dtThen.toLocaleString(undefined,{
+                timeString = dtThen.toLocaleString(undefined, {
                     month: 'long',
                     day: 'numeric',
                     hour: 'numeric',
                     minute: 'numeric',
                 })
             } else {
-                timeString = dtThen.toLocaleString(undefined,{
+                timeString = dtThen.toLocaleString(undefined, {
                     year: '2-digit',
                     month: 'long',
                     day: 'numeric',
@@ -54,13 +63,18 @@ class MessageBubble extends React.Component {
         let domMessage = null
         if (message.type === 'text') {
             domMessage = (
-                <TextMessage message={message.message}></TextMessage>
+                <TextMessage message={message.message} isLatest={props.isLatest} />
             )
-        } else if (message.type === 'suggest_counselor') {
+        } else if (message.type === 'suggest') {
             domMessage = (
-                <SuggestCounselorMessage message={message.message}></SuggestCounselorMessage>
+                <SuggestMessage message={message.message} isLatest={props.isLatest} onSubmit={this.handleSubmit} />
             )
-        } else {
+        } else if (message.type === 'prompt') {
+            domMessage = (
+                <PromptMessage message={message.message} isLatest={props.isLatest} onSubmit={this.handleSubmit} />
+            )
+        } 
+        else {
             throw new Error(`Un-support message type ${message.type}`)
         }
 
