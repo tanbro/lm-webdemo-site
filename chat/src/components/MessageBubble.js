@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import TextMessage from './TextMessage'
 import SuggestCounselorMessage from './SuggestCounselorMessage'
+import PromptMessage from './PromptMessage'
 
 import './MessageBubble.css';
 
@@ -34,14 +35,14 @@ class MessageBubble extends React.Component {
         if (message.time) {
             const dtThen = new Date(message.time)
             if (dtThen.year === dtNow.year) {
-                timeString = dtThen.toLocaleString(undefined,{
+                timeString = dtThen.toLocaleString(undefined, {
                     month: 'long',
                     day: 'numeric',
                     hour: 'numeric',
                     minute: 'numeric',
                 })
             } else {
-                timeString = dtThen.toLocaleString(undefined,{
+                timeString = dtThen.toLocaleString(undefined, {
                     year: '2-digit',
                     month: 'long',
                     day: 'numeric',
@@ -54,11 +55,15 @@ class MessageBubble extends React.Component {
         let domMessage = null
         if (message.type === 'text') {
             domMessage = (
-                <TextMessage message={message.message}></TextMessage>
+                <TextMessage message={message.message} />
             )
         } else if (message.type === 'suggest_counselor') {
             domMessage = (
-                <SuggestCounselorMessage message={message.message}></SuggestCounselorMessage>
+                <SuggestCounselorMessage message={message.message} />
+            )
+        } else if (message.type === 'prompt_request') {
+            domMessage = (
+                <PromptMessage message={message.message} />
             )
         } else {
             throw new Error(`Un-support message type ${message.type}`)

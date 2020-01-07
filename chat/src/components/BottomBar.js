@@ -143,6 +143,7 @@ class BottomBar extends React.Component {
 
     render() {
         const state = this.state
+        const props = this.props
 
         return (
             <div>
@@ -155,7 +156,7 @@ class BottomBar extends React.Component {
                                 maxLength='256'
                                 rows='1'
                                 value={state.value}
-                                disabled={state.isSending}
+                                disabled={state.isSending || props.inputDisabled}
                                 onChange={this.handleChange}
                                 placeholder='输入您要发送的内容'>
                             </textarea>

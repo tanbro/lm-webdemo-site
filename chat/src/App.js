@@ -33,6 +33,7 @@ class App extends React.Component {
       info: {},
       history: []
     },
+    inputDisabled: false
   }
 
   componentDidMount() {
@@ -321,17 +322,25 @@ class App extends React.Component {
       })
       .then(
         result => {
-          const convSpeechList = result
           // 伪造第一句问候语
+          let convSpeechList = result
           convSpeechList.unshift({
             type: 'text',
             message: convInfo.personality,
             direction: 'outgoing',
           })
+          //
+          let noInput = false
+          let latestMsg = convSpeechList[convSpeechList.length-1]
+          if (latestMsg) {
+            noInput = (latestMsg.type === 'prompt_request') || (latestMsg.type === 'suggest_counselor')
+          }
+          //
           this.setState(state => ({
             conv: Object.assign(state.conv, {
               history: convSpeechList
-            })
+            }),
+            inputDisabled: noInput,
           }))
         },
         error => {
@@ -494,7 +503,7 @@ class App extends React.Component {
         <LoadingModal isOpen={state.loadingModal.isOpen} title={state.loadingModal.title} text={state.loadingModal.text}></LoadingModal>
         <TopBar logo={logo} title='话媒心理' onMenuItemClick={this.handleOptionMenuClick}></TopBar>
         <MessageBubbleList conv={state.conv}></MessageBubbleList>
-        <BottomBar onSubmit={this.handleInputMessageSubmit}></BottomBar>
+        <BottomBar inputDisabled={state.inputDisabled} onSubmit={this.handleInputMessageSubmit}></BottomBar>
       </div>
     )
   }
