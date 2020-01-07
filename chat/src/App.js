@@ -21,6 +21,7 @@ class App extends React.Component {
     // Bind the this context to the handler function
     this.handleInputMessageSubmit = this.handleInputMessageSubmit.bind(this)
     this.handleOptionMenuClick = this.handleOptionMenuClick.bind(this)
+    this.handleReceivedMessageSubmit = this.handleReceivedMessageSubmit.bind(this)
   }
 
   state = {
@@ -329,13 +330,15 @@ class App extends React.Component {
             message: convInfo.personality,
             direction: 'outgoing',
           })
-          //
+          // 计算，是否可以允许输入
           let noInput = false
-          let latestMsg = convSpeechList[convSpeechList.length-1]
-          if (latestMsg) {
-            noInput = (latestMsg.type === 'prompt_request') || (latestMsg.type === 'suggest_counselor')
+          for (let i = convSpeechList.length - 1; i >= 0; --i) {
+            const msgObj = convSpeechList[i]
+            if (msgObj.direction === 'outgoing') {
+              noInput = (msgObj.type === 'prompt') || (msgObj.type === 'suggest')
+              break
+            }
           }
-          //
           this.setState(state => ({
             conv: Object.assign(state.conv, {
               history: convSpeechList
@@ -364,7 +367,6 @@ class App extends React.Component {
     })
       .then(response => {
         if (!response.ok) {
-          //TODO: 错误处理
           this.closeLoadingModal()
           throw new Error(response.statusText)
         } else {
@@ -458,8 +460,8 @@ class App extends React.Component {
         .then(
           result => {
             let recvMsg = result
-            if (!Array.isArray(recvMsg)){
-              recvMsg=[recvMsg]
+            if (!Array.isArray(recvMsg)) {
+              recvMsg = [recvMsg]
             }
             for (const msg of recvMsg) {
               this.setState(state => {
@@ -476,6 +478,70 @@ class App extends React.Component {
           },
           error => {
             /// TODO: input 错误处理
+            reject(error)
+          }
+        )
+    })
+  }
+
+  handleReceivedMessageSubmit(event) {
+    return new Promise((resolve, reject) => {
+      // 事件的数据
+      const dataset = event.target.dataset
+      // 要发送的消息
+      const sndMsg = {
+        type: dataset.type,
+        message: {
+          value: dataset.value
+        },
+        time: new Date(),
+        direction: 'incoming',
+      }
+      // 增加对话历史数据
+      this.setState(state => {
+        state.conv.history.push(sndMsg)
+        return {
+          conv: Object.assign(state.conv, {
+            history: state.conv.history
+          })
+        }
+      })
+      // 请求服务器的答复
+      fetch(`${apiBaseUrl}${this.state.conv.info.uid}`, {
+        method: 'POST',
+        cache: 'no-cache',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sndMsg)
+      })
+        .then(response => {
+          if (!response.ok) {
+            reject(new Error(response.statusText))
+          }
+          return response.json()
+        })
+        .then(
+          result => {
+            let recvMsg = result
+            if (!Array.isArray(recvMsg)) {
+              recvMsg = [recvMsg]
+            }
+            for (const msg of recvMsg) {
+              this.setState(state => {
+                // 增加对话历史数据
+                state.conv.history.push(msg)
+                return {
+                  conv: Object.assign(state.conv, {
+                    history: state.conv.history
+                  })
+                }
+              })
+            }
+            resolve(recvMsg)
+          },
+          error => {
             reject(error)
           }
         )
@@ -502,7 +568,7 @@ class App extends React.Component {
       <div className='App'>
         <LoadingModal isOpen={state.loadingModal.isOpen} title={state.loadingModal.title} text={state.loadingModal.text}></LoadingModal>
         <TopBar logo={logo} title='话媒心理' onMenuItemClick={this.handleOptionMenuClick}></TopBar>
-        <MessageBubbleList conv={state.conv}></MessageBubbleList>
+        <MessageBubbleList conv={state.conv} onSubmit={this.handleReceivedMessageSubmit}></MessageBubbleList>
         <BottomBar inputDisabled={state.inputDisabled} onSubmit={this.handleInputMessageSubmit}></BottomBar>
       </div>
     )
