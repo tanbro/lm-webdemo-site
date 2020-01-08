@@ -592,7 +592,7 @@ class App extends React.Component {
       <div className='App'>
         <LoadingModal isOpen={state.loadingModal.isOpen} title={state.loadingModal.title} text={state.loadingModal.text} />
         <ConfigModal isOpen={state.showConfigModal} data={state.config} onClose={this.handleConfigModalClose} />
-        <TopBar logo={logo} title={`话媒心理 ${state.config.stateless ? '(无状态模式)' : ''}`} onMenuItemClick={this.handleOptionMenuClick} />
+        <TopBar logo={logo} title={`话媒心理 ${state.config.stateless ? '(无状态)' : ''}`} onMenuItemClick={this.handleOptionMenuClick} />
         <MessageBubbleList conv={state.conv} onSubmit={this.handleReceivedMessageSubmit} />
         <BottomBar inputDisabled={state.inputDisabled} onSubmit={this.handleInputMessageSubmit} />
       </div>

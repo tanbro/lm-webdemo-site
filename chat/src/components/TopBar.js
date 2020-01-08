@@ -28,7 +28,7 @@ class TopBar extends React.Component {
         return (
             <nav className="navbar fixed-top shadow navbar-dark bg-dark">
                 <img src={this.props.logo} alt="" className="rounded-circle" width="48" height="48"></img>
-                <span className="navbar-brand">{this.props.title}</span>
+                <span className="navbar-brand no-wrap">{this.props.title}</span>
                 <div className="btn-group">
                     <button type="button"
                         className="btn btm-sm btn-primary dropdown-toggle"
