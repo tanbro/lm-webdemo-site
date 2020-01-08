@@ -345,7 +345,7 @@ class App extends React.Component {
           for (let i = convSpeechList.length - 1; i >= 0; --i) {
             const msgObj = convSpeechList[i]
             if (msgObj.direction === 'outgoing') {
-              noInput = (msgObj.type === 'prompt') || (msgObj.type === 'suggest')
+              noInput = (msgObj.is_input)
               break
             }
           }
@@ -487,7 +487,7 @@ class App extends React.Component {
                 for (let i = state.conv.history.length - 1; i >= 0; --i) {
                   const msgObj = state.conv.history[i]
                   if (msgObj.direction === 'outgoing') {
-                    noInput = (msgObj.type === 'prompt') || (msgObj.type === 'suggest')
+                    noInput = (msgObj.is_input)
                     break
                   }
                 }
@@ -516,6 +516,7 @@ class App extends React.Component {
       // 要发送的消息
       const sndMsg = {
         type: dataset.type,
+        'is_result': true,
         message: {
           value: dataset.value
         },

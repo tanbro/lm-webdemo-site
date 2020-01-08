@@ -21,24 +21,23 @@ class MessageBubbleList extends React.Component {
 
     render() {
         const props = this.props
-        const conv = props.conv
 
-        const domChildren = conv.history.map(
+        const domChildren = props.conv.history.map(
             (value, index) => {
-                if (value.type === 'suggest.result') {
+                if (
+                    (value.direction === 'incoming')
+                    && (value.is_result)
+                ) {
                     // 不显示这种消息
-                    return null
-                }
-                if (value.type === 'prompt.result') {
-                    // 不显示这种消息
+                    console.debug('不显示该消息: ', index, value)
                     return null
                 }
                 return (
                     <MessageBubble
-                        key={`${conv.info.uid}.${index}`}
-                        info={conv.info}
+                        key={`${props.conv.info.uid}.${index}`}
+                        info={props.conv.info}
                         message={value}
-                        isLatest={index === conv.history.length - 1}
+                        isLatest={index === props.conv.history.length - 1}
                         onSubmit={this.handleSubmit}
                     />
                 )

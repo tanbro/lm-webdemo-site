@@ -75,6 +75,7 @@ class MessageBubble extends React.Component {
             )
         } 
         else {
+            console.warn('Un-support message:', message)
             throw new Error(`Un-support message type ${message.type}`)
         }
 
