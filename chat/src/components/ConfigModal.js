@@ -41,7 +41,7 @@ class ConfigModal extends React.Component {
                                     <p><small className='text-info'>默认: 禁用</small></p>
                                     <p><small className='text-danger'>刷新后将被自动重置为默认值</small></p>
                                     <p>
-                                        <small className="form-text text-secondary">这是一个相当高级的选项，一旦启用，服务器将不再维护会话状态，而是一律使用语言模型进行文本生成。</small>
+                                        <small className="form-text text-secondary">既“倾诉对话”模式。这是一个相当高级的选项，一旦启用，服务器将不再维护会话状态，而是一律使用语言模型进行文本生成。</small>
                                     </p>
                                 </Col>
                                 <Col>

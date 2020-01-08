@@ -1,6 +1,6 @@
-import React from 'react';
+import React from 'react'
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 import TextMessage from './TextMessage'
 import SuggestMessage from './SuggestMessage'

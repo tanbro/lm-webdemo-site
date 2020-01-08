@@ -19,6 +19,13 @@ class CounselorCard extends React.Component {
     render() {
         const props = this.props
 
+        let detailText = ''
+        if (props.data.tags.length > 0) {
+            for (let i = 0; i < props.data.tags.length; ++i) {
+                detailText += `${i === 0 ? '擅长领域: ' : ', '}${props.data.tags[i]}`
+            }
+        }
+
         return (
             <div className="card shadow">
                 <div className="row no-gutters">
@@ -54,7 +61,7 @@ class CounselorCard extends React.Component {
                     </div>
                 </div>
                 <div className="card-body p-1">
-                    <p className="card-text">{props.data.detail}</p>
+                    <p className="card-text">{detailText}</p>
                 </div>
             </div>
         )
