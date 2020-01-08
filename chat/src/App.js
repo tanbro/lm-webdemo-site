@@ -1,14 +1,19 @@
 import React from 'react'
 
+import './App.css'
+import logo from './logo.svg'
+
+import 'jquery/dist/jquery.min.js'
+import 'popper.js/dist/umd/popper.min.js'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.min.js'
 
 import TopBar from './components/TopBar'
 import BottomBar from './components/BottomBar'
 import MessageBubbleList from './components/MessageBubbleList'
 import LoadingModal from './components/LoadingModal'
+import ConfigModal from './components/ConfigModal'
 
-import './App.css'
-import logo from './logo.svg'
 
 
 const apiBaseUrl = `${process.env.REACT_APP_API_BASE_URL}`
@@ -22,6 +27,7 @@ class App extends React.Component {
     this.handleInputMessageSubmit = this.handleInputMessageSubmit.bind(this)
     this.handleOptionMenuClick = this.handleOptionMenuClick.bind(this)
     this.handleReceivedMessageSubmit = this.handleReceivedMessageSubmit.bind(this)
+    this.handleConfigModalClose = this.handleConfigModalClose.bind(this)
   }
 
   state = {
@@ -34,7 +40,11 @@ class App extends React.Component {
       info: {},
       history: []
     },
-    inputDisabled: false
+    inputDisabled: false,
+    showConfigModal: false,
+    config: {
+      stateless: false,
+    }
   }
 
   componentDidMount() {
@@ -442,7 +452,13 @@ class App extends React.Component {
       })
 
       // 请求服务器的答复
-      fetch(`${apiBaseUrl}${this.state.conv.info.uid}`, {
+      let qs = ''
+      if (this.state.config.stateless) {
+        let urlParams = new URLSearchParams()
+        urlParams.append('stateless', true)
+        qs = '?' + urlParams.toString()
+      }
+      fetch(`${apiBaseUrl}${this.state.conv.info.uid}${qs}`, {
         method: 'POST',
         cache: 'no-cache',
         mode: 'cors',
@@ -548,6 +564,12 @@ class App extends React.Component {
     })
   }
 
+  handleConfigModalClose(config) {
+    this.setState(state => ({
+      showConfigModal: false,
+      config: Object.assign(state.config, config)
+    }))
+  }
 
   handleOptionMenuClick(data) {
     if (data.option === 'reload') {
@@ -556,6 +578,8 @@ class App extends React.Component {
       this.reCreateConv()
     } else if (data.option === 'clear') {
       this.clearCurrentConvHistory()
+    } else if (data.option === 'more') {
+      this.setState({ showConfigModal: true })
     } else {
       throw new Error(`Unknown OptionMenu: ${data.option}`)
     }
@@ -566,10 +590,11 @@ class App extends React.Component {
 
     return (
       <div className='App'>
-        <LoadingModal isOpen={state.loadingModal.isOpen} title={state.loadingModal.title} text={state.loadingModal.text}></LoadingModal>
-        <TopBar logo={logo} title='话媒心理' onMenuItemClick={this.handleOptionMenuClick}></TopBar>
-        <MessageBubbleList conv={state.conv} onSubmit={this.handleReceivedMessageSubmit}></MessageBubbleList>
-        <BottomBar inputDisabled={state.inputDisabled} onSubmit={this.handleInputMessageSubmit}></BottomBar>
+        <LoadingModal isOpen={state.loadingModal.isOpen} title={state.loadingModal.title} text={state.loadingModal.text} />
+        <ConfigModal isOpen={state.showConfigModal} data={state.config} onClose={this.handleConfigModalClose} />
+        <TopBar logo={logo} title={`话媒心理 ${state.config.stateless ? '(无状态模式)' : ''}`} onMenuItemClick={this.handleOptionMenuClick} />
+        <MessageBubbleList conv={state.conv} onSubmit={this.handleReceivedMessageSubmit} />
+        <BottomBar inputDisabled={state.inputDisabled} onSubmit={this.handleInputMessageSubmit} />
       </div>
     )
   }

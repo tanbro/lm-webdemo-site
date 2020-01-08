@@ -14,7 +14,7 @@ class LoadingModal extends React.Component {
                     <ModalHeader>
                         <div className='d-flex justify-content-center'>
                             <div className='p-2'>
-                                <div className='spinner-grow spinner-grow-xl' role='status'></div>
+                                <div className='spinner-border spinner-border-xl' role='status'></div>
                             </div>
                             <div className='p-2 text-xl'>
                                 {props.title}

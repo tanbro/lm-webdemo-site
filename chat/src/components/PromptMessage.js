@@ -71,28 +71,28 @@ class SuggestCounselorMessage extends React.Component {
                 <div className='row justify-content-center'>
                     <div className='col-4'>
                         <button
-                            type="button" className="btn btn-sm btn-primary shadow"
+                            type="button" className="btn btn-sm btn-primary btn-block shadow"
                             data-type='prompt.result' data-value='yes'
                             onClick={this.handleSubmit}
                             disabled={submitDisabled}
                         >
                             <span role="status" aria-hidden="true"
-                                className={`spinner-grow spinner-grow-sm ${!(state.submitting && state.value === 'yes') ? 'd-none' : ''}`}
+                                className={`spinner-border spinner-border-sm ${!(state.submitting && state.value === 'yes') ? 'd-none' : ''}`}
                             />
-                            <span data-type='prompt.result' data-value='yes'>{yesLabel}</span>
+                            {yesLabel}
                         </button>
                     </div>
                     <div className='col-4'>
                         <button
-                            type="button" className="btn btn-sm btn-secondary shadow"
+                            type="button" className="btn btn-sm btn-secondary btn-block shadow"
                             data-type='prompt.result' data-value='no'
                             onClick={this.handleSubmit}
                             disabled={submitDisabled}
                         >
                             <span role="status" aria-hidden="true"
-                                className={`spinner-grow spinner-grow-sm ${!(state.submitting && state.value === 'no') ? 'd-none' : ''}`}
+                                className={`spinner-border spinner-border-sm ${!(state.submitting && state.value === 'no') ? 'd-none' : ''}`}
                             />
-                            <span data-type='prompt.result' data-value='no'>{noLabel}</span>
+                            {noLabel}
                         </button>
                     </div>
                 </div>

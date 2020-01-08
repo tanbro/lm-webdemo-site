@@ -31,7 +31,7 @@ class ExampleSelectModal extends React.Component {
         const handle = this.props.onClose
         if (handle) {
             const value = this.state.examples[event.target.dataset.selectedIndex]
-            handle(value)
+            return handle(value)
         }
     }
 
@@ -163,7 +163,7 @@ class BottomBar extends React.Component {
                             <div className='input-group-append'>
                                 <button type='submit' value='Submit' className='btn btn-sm btn-outline-secondary text-dark x-bottombar-submit' disabled={state.isSending}>
                                     <span className={`${state.isSending ? 'd-none' : ''}`}>发送</span>
-                                    <span className={`spinner-grow spinner-grow-sm ${state.isSending ? '' : 'd-none'}`}
+                                    <span className={`spinner-border spinner-border-sm ${state.isSending ? '' : 'd-none'}`}
                                         role="status" aria-hidden="true">
                                     </span>
                                 </button>

@@ -5,22 +5,22 @@ import 'popper.js/dist/umd/popper.min.js'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min.js'
 
+
 class TopBar extends React.Component {
     constructor(props) {
         super(props)
-
         // This binding is necessary to make `this` work in the callback
         this.handleMenuItemItemClick = this.handleMenuItemItemClick.bind(this)
     }
 
 
-    handleMenuItemItemClick(evt) {
+    handleMenuItemItemClick(event) {
         const handler = this.props.onMenuItemClick
         if (handler) {
             const data = {
-                option: evt.target.dataset.option
+                option: event.target.dataset.option
             }
-            handler(data)
+            return handler(data)
         }
     }
 
@@ -36,6 +36,7 @@ class TopBar extends React.Component {
                     >
                         选项
                     </button>
+
                     <div className="dropdown-menu dropdown-menu-right">
                         <button className="dropdown-item" type="button"
                             data-option='reload'
@@ -47,14 +48,25 @@ class TopBar extends React.Component {
                             data-option='clear'
                             onClick={this.handleMenuItemItemClick}
                         >
-                            清空当前会话历史
+                            重置当前会话
                         </button>
+
                         <div className="dropdown-divider"></div>
+
                         <button className="dropdown-item" type="button"
                             data-option='reset'
                             onClick={this.handleMenuItemItemClick}
                         >
-                            重置会话(警告: 将耗费较长时间)
+                            重启语言模型(警告: 将耗费较长时间)
+                        </button>
+
+                        <div className="dropdown-divider"></div>
+
+                        <button className="dropdown-item" type="button"
+                            data-option='more'
+                            onClick={this.handleMenuItemItemClick}
+                        >
+                            更多 ...
                         </button>
                     </div>
                 </div>
