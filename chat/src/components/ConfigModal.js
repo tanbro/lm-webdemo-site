@@ -45,6 +45,7 @@ class ConfigModal extends React.Component {
                                     </p>
                                 </Col>
                                 <Col>
+                                    {/* eslint-disable-next-line */}
                                     <BootstrapSwitchButton onlabel='启用' offlabel='禁用' style='w-100'
                                         checked={props.data.stateless}
                                         onChange={checked => {
