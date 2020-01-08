@@ -483,10 +483,19 @@ class App extends React.Component {
               this.setState(state => {
                 // 增加对话历史数据
                 state.conv.history.push(msg)
+                let noInput = false
+                for (let i = state.conv.history.length - 1; i >= 0; --i) {
+                  const msgObj = state.conv.history[i]
+                  if (msgObj.direction === 'outgoing') {
+                    noInput = (msgObj.type === 'prompt') || (msgObj.type === 'suggest')
+                    break
+                  }
+                }
                 return {
                   conv: Object.assign(state.conv, {
                     history: state.conv.history
-                  })
+                  }),
+                  inputDisabled: noInput,
                 }
               })
             }
